@@ -2,3 +2,4 @@
 <<<<<<< HEAD
 1st line in vs code
 NEW LINE from different US
+NEW LINE from US3

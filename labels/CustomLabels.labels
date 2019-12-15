@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>EMT_Events_Classification_guide_link</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>EMT_Events_Classification_guide_link</shortDescription>
+        <value>https://philipscrm--M2OEMT.cs95.my.salesforce.com/sfc/p/0x00000092hD/a/0x0000008XuD/.bidMZh0ZPwrkqI77FL4fn4zxi2YS5wV7EVoGCB5AVk</value>
+    </labels>
+</CustomLabels>

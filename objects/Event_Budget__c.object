@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Event_Collaborator_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Event Collaborator Email</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Event_primary_contact_email__c</fullName>
+        <externalId>false</externalId>
+        <label>Event primary contact email</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <validationRules>
+        <fullName>number_of_budgets</fullName>
+        <active>true</active>
+        <errorConditionFormula>Event__r.Number_of_budgets__c &gt;= 1</errorConditionFormula>
+        <errorMessage>You can&apos;t have more than one budget related to the Event.</errorMessage>
+    </validationRules>
+</CustomObject>

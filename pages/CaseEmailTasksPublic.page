@@ -1,0 +1,14 @@
+<apex:page standardController="Case" extensions="caseEmailExtn">
+<!-- DELETE THIS PAGE, NO WHERE IS USED NOW
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+
+    <apex:form >
+      <apex:pageBlock mode="Edit">
+        <apex:pageBlockTable value="{!publicEmail}" var="t">
+            <apex:column headerValue="Subject" value="{!t.Subject}"/>
+            <apex:column headerValue="Description" value="{!t.TextBody}"/>
+        </apex:pageBlockTable>
+      </apex:pageBlock>
+    </apex:form>
+       -->
+</apex:page>

@@ -1,0 +1,2 @@
+<apex:page action="{!URLFOR('/customercare/CustomerCareContactUs')}">
+</apex:page>

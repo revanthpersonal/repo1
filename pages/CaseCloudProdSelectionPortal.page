@@ -1,0 +1,135 @@
+<apex:page id="pg"  standardController="Case" extensions="CaseCloudDeplProdSelection" title="New Cloud Case" sidebar="false">
+
+<style>
+ .helpTxt {
+    font-size:14px; 
+    font-style:italic;
+ }
+</style>
+
+<apex:form id="frm">
+   
+    <apex:pageBlock title="{!pageTitle}" id="pgblk">
+        <apex:pageMessages /> 
+            <apex:pageBlockButtons location="bottom"> 
+                             
+                <apex:commandButton value="Next" id="next" action="{!nextPage}"  reRender="frm"/>                                          
+                <apex:commandButton value="Cancel" id="Cancel" onclick="history.go(-1); return false;" immediate="true"/>                 
+            </apex:pageBlockButtons>
+  
+       <apex:outputText value="{!$Label.CustomerPortalCloudFRCaseHelp}" styleClass="helpTxt" rendered="{!BEGINS(caseTypeName,'Cloud Feature')}"/>
+
+       <apex:outputText value="{!$Label.CustomerPortalCloudServiceCaseHelp}" styleClass="helpTxt" rendered="{!AND(BEGINS(caseTypeName,'Cloud Service'),portalRequest!='dtprv')}" />
+
+       <apex:outputText value="{!$Label.CustomerPortalCloudSupportCaseHelp}" styleClass="helpTxt" rendered="{!BEGINS(caseTypeName,'Cloud Support')}" />
+
+       <br/><br/>
+  
+       <apex:pageBlockSection columns="1" id="depl"  >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Cloud Deployment" />
+                <apex:outputPanel layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />          
+                        <apex:selectList value="{!cs.Cloud_Deployment__c}" size="1" style="width:200px" > 
+                            <apex:actionSupport action="{!resetCldDepoyment}" event="onchange" reRender="frm"/>
+                            <apex:selectOptions value="{!deplopts}" />                                    
+                        </apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem>             
+       </apex:pageBlockSection>  
+   
+       <apex:pageBlockSection columns="1" id="pgsecProduct"  >
+        
+           <apex:outputText value="Account: {!accntName}" style="margin-left:70px;"/>
+            
+           <apex:pageBlockSectionItem id="pgsecItemProductLine1" rendered="{!selectCldCateg}">
+                <apex:outputLabel value="Cloud Service" />
+                <apex:outputPanel id="pnl1" layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />          
+                        <apex:selectList value="{!cs.Cloud_Service__c}" size="1" style="width:200px" id="prdval">
+                            <apex:selectOptions value="{!prodopts}" id="prdlst"/>                                    
+                        </apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem> 
+       </apex:pageBlockSection>  
+       
+      <apex:pageBlockSection rendered="{!locRequired}" columns="1"> 
+          <apex:pageBlockSectionItem id="pgsecLoc">
+                <apex:outputLabel value="Location" />
+                <apex:outputPanel id="pnloc" layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />          
+                        <apex:selectList value="{!cs.Deployment_Location__c}" size="1" style="width:200px" id="locval" >
+                            <apex:selectOptions value="{!cdLocations}" id="lctns"/>                                    
+                        </apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem> 
+       </apex:pageBlockSection>  
+                
+   <apex:outputPanel rendered="{!AND(isPureConnect,selectProd)}"> 
+   
+         <apex:pageBlockSection columns="1" id="categ" >
+            <apex:selectList value="{!selectedCategory}" size="1" label="Product Category" style="width:200px" >
+                <apex:selectOptions value="{!categories}" />                
+                <apex:actionSupport event="onchange" rerender="pcgrp,pgsecPCProduct,pcPrblm" action="{!onchangeCategory}" status="status" />
+            </apex:selectList>
+        </apex:pageBlockSection>
+      
+        <apex:pageBlockSection columns="1" id="pcgrp" >
+           <apex:pageBlockSectionItem id="grpitm">
+                <apex:outputLabel value="Product Group" />
+                <apex:outputPanel id="pnl10" layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />
+                        <apex:selectList value="{!selectedPureCnctGrp}" size="1" label="Product Group" style="width:200px" >
+                            <apex:selectOptions value="{!pureCnctGroups}" />                
+                            <apex:actionSupport event="onchange" action="{!onchangePureConnectGroup}" status="status" rerender="pgsecPCProduct,pcPrblm " />
+                        </apex:selectList>
+            </apex:outputPanel>
+          </apex:pageBlockSectionItem> 
+        </apex:pageBlockSection>
+       
+        <apex:pageBlockSection columns="1" id="pgsecPCProduct" >
+            <apex:pageBlockSectionItem id="pgsecItemProductLine1">
+                <apex:outputLabel value="Product" />
+                <apex:outputPanel id="pnl1" layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />          
+                        <apex:selectList value="{!selectedPureCnctProduct}" size="1" style="width:200px" >
+                            <apex:selectOptions value="{!pureCnctProducts}" />             
+                            <apex:actionSupport event="onchange" rerender="pgblk" action="{!onchangePureConnectProduct}" status="status" />
+                        </apex:selectList>
+                    </apex:outputPanel>
+            </apex:pageBlockSectionItem> 
+       </apex:pageBlockSection>  
+
+        <apex:pageBlockSection columns="1" id="mvers" > 
+         <apex:pageBlockSectionItem >           
+           <apex:outputLabel value="Major Version" />
+              <apex:outputPanel layout="block" styleClass="requiredInput" >
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" />
+                          <apex:inputField value="{!cs.Major_Version__c}" style="width:200px"/>
+           </apex:outputPanel>
+          </apex:pageBlockSectionItem>
+       </apex:pageBlockSection>   
+
+       <apex:pageBlockSection columns="1" id="prel" > 
+         <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Patch Release" />
+              <apex:inputText value="{!patchRelease}" style="width:100px; height:23px"/>
+         </apex:pageBlockSectionItem>
+       </apex:pageBlockSection>
+
+       <apex:pageBlockSection columns="1" id="pcPrblm" >
+          <apex:pageBlockSectionItem id="sectPcPrblm">
+           <apex:outputLabel value="Problem Category" />
+                    <apex:selectList value="{!selectedPureCnctProblm}" size="1" label="Problem Area" style="width:200px" >
+                        <apex:selectOptions value="{!pureCnctProbCateg}" />                
+                    </apex:selectList>
+           </apex:pageBlockSectionItem> 
+        </apex:pageBlockSection>
+        
+     </apex:outputPanel>       
+    <!-- PureConnect End --->    
+      
+   </apex:pageBlock>
+   
+</apex:form>
+</apex:page>

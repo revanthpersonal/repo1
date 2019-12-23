@@ -1,0 +1,27 @@
+<apex:page standardController="Order_Line_Item__c" extensions="AppFoundryOLIController"  readonly="false" >
+    <apex:form >
+    <apex:pageBlock title="Order Line Item">
+        <apex:pageBlockButtons >
+            <apex:commandButton id="EditButton" value="Edit" action="{!editFn}" />
+            <apex:commandButton id="DeleteButton" value="Delete" action="{!deleteFn}" />
+            <apex:commandButton id="CancelButton" value="Cancel" action="{!backFn}" />   
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection title="Order Line Item View">
+            <apex:outputField value="{!orderLineItem.Name}"/>
+            <apex:outputField value="{!orderLineItem.Order__c}"/>
+            <apex:outputField value="{!orderLineItem.Product__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.Material_Description__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.BigMachines_Quantity__c}" rendered="{!!isTechSprt}"/>
+          <!--   <apex:outputField value="{!orderLineItem.Sales_Price__c}"/> 
+            <apex:outputField value="{!orderLineItem.Maintenance_Start_Date__c}"/>
+            <apex:outputField value="{!orderLineItem.Maintenance_End_Date__c }"/>  -->
+            <apex:outputField value="{!orderLineItem.PM_Approval_Required_Product__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.APN_Number__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.Material_Number__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.Sales_Price__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.List_Price__c}" rendered="{!!isTechSprt}"/>
+            <apex:outputField value="{!orderLineItem.Memo__c}"/>            
+        </apex:pageBlockSection>
+	</apex:pageBlock>
+    </apex:form>
+</apex:page>

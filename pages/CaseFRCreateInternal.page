@@ -1,0 +1,43 @@
+<apex:page standardController="Case" extensions="CaseSaveController">
+    
+    <style>
+      table { border-spacing: 5px 5px; } 
+    </style>
+           
+    <apex:form id="caseForm" >
+        <apex:pageBlock id="pgBlk">
+            <apex:pageBlockButtons location="bottom">    
+                <apex:commandButton value="Save" id="Save" action="{!saveCase}" />
+                 <apex:commandButton value="Cancel" id="Cancel" immediate="true" onclick="testCloseTab(); return false " />              
+            </apex:pageBlockButtons>
+    
+            <apex:pageBlockSection columns="1" title="{!pageTitle}" collapsible="false" >
+     
+                    <apex:inputfield required="true" value="{!cs.Subject}"  style="width:580px" />
+                    <apex:inputfield required="true" value="{!cs.Description}"  style="width:580px; height:200px"/>
+       
+            </apex:pageBlockSection> 
+      
+        </apex:pageBlock>
+             
+    </apex:form> 
+ 
+ <apex:includeScript value="/support/console/35.0/integration.js"/> 
+<script type="text/JavaScript"> 
+     
+        function testCloseTab() {
+            if (sforce.console.isInConsole())  {   
+                sforce.console.getEnclosingTabId(closeSubtab);
+            }
+            else {
+                 window.parent.top.location.href = '/500';
+            }
+        }
+              
+        var closeSubtab = function closeSubtab(result) {
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+ </script>          
+    
+</apex:page>

@@ -1,0 +1,403 @@
+<apex:page controller="BeyondRegistrationController" showHeader="false" standardStylesheets="false" docType="html-5.0" applyBodyTag="false" applyHtmlTag="false">
+    
+    <html lang="en">
+        
+   		<head>
+            <title>Beyond | User Registration</title>
+            <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300" />
+            <style type="text/css">
+                
+               	* {
+					margin: 0;
+                	padding: 0;
+				}
+
+				html {
+					box-sizing: border-box;
+                    font-size: 18px;
+					line-height: 24px;
+				}
+
+				*, *:before, *:after {
+					box-sizing: inherit;
+				}
+
+				a {
+					color: #FF4F1F;
+					text-decoration: none;
+				}
+
+				a:hover {
+					text-decoration: underline;
+				}
+
+                body {
+					background: #470E4A;
+                	font-family: Roboto, arial;
+                	font-weight: 100;
+                	color: #fff;
+                }
+
+                .wrapper {
+                	margin: 0 auto;
+                    padding: 0 50px;
+                	max-width: 1260px;
+				}
+
+				/* Page Header */
+
+				.page-header {
+					padding-bottom: 6rem;
+				}
+
+				.page-header .wrapper {
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					padding: 40px 50px;
+				}
+
+				.page-header h1 {
+					width: 150px;
+					height: 44px;
+					flex: 0 0 200px;
+				}
+
+				.page-header h1 a {
+					background: url('https://dhqbrvplips7x.cloudfront.net/beyond/explore/1.8.0-251/assets/img/logo.svg') no-repeat;
+
+					display: block;
+					width: 150px;
+					height: 44px;
+
+					text-indent: 200%;
+					overflow: hidden;
+					white-space: nowrap;
+				}
+
+				.page-header ul {
+					list-style: none;
+					flex: 1 1 auto;
+					text-align: right;
+					font-weight: normal;
+				}
+
+				/* Content */
+
+				h2 {
+					font-size: 3rem;
+					line-height: 1.1862em;
+					margin-bottom: 10px;
+					font-weight: 100;
+				}
+
+				h3 {
+					font-size: 1.6667em;
+					line-height: 1.3333em;
+					margin-bottom: 40px;
+					font-weight: 100;
+				}
+
+				.content .columns {
+					display: flex;
+					flex-direction: row;
+					justify-content: space-between;
+				}
+
+				.about, .signup-form {
+					 width: 45%;
+				}
+
+				.about p {
+					line-height: 1.5556em;
+				}
+
+				.about p + p {
+					margin-top: 1.5556em;
+				}
+
+				.signup-form {
+					background-color: #F3F3F3;
+					color: #4E5054;
+					border: 1px solid #707070;
+					border-radius: 10px;
+					padding: 3rem;
+                    margin-bottom: 6rem;
+				}
+
+				.signup-form h4 {
+					font-size: 1.3333rem;
+					line-height: 1.1667em;
+					text-align: center;
+					color: #4E5054;
+					font-weight: 100;
+					margin-bottom: 1rem;
+				}
+
+				.signup-form input[type="text"] {
+					border: 1px solid #D3D3D3;
+					padding: 1rem;
+					font-size: 1rem;
+					color: #959699;
+					width: 100%;
+					margin-bottom: 1rem;
+				}
+                
+                .signup-form ::placeholder {
+					color: #959699;
+				}
+
+				.signup-form select {
+					border: 1px solid #D3D3D3;
+					background: #fff;
+					border-radius: 0;
+					-webkit-appearance: none;
+					-webkit-border-radius: 0px;
+					padding: 1rem;
+					font-size: 1rem;
+					margin-bottom: 1rem;
+					width: 100%;
+
+					color: #959699;
+
+					background-image: url(https://genbin.genesys.com/tools/v_gray.png)!important;
+					background-repeat: no-repeat,repeat!important;
+					background-position: right 1rem top 50%,0 0!important;
+					background-size: 1em auto,100%!important;
+					cursor: pointer;
+				}
+
+				.signup-form label {
+					visibility: hidden;
+					height: 1px;
+					display: block;
+				}
+
+				.rb-h {
+					display: none;
+				}
+
+				.submit {
+					background: #FF4F1F;
+					border: 1px solid #FF4F1F;
+					padding: .944rem 0;
+					display: block;
+					width: 100%;
+					color: #fff;
+					border-radius: 5em;
+					font-size: 1.111em;
+					font-weight: 100;
+					margin-top: 2rem;
+
+					cursor: pointer;
+
+					transition: all ease .3s;
+				}
+
+				.submit:hover {
+					background: transparent;
+					border: 1px solid #FF4F1F;
+					color: #FF4F1F;
+				}
+                
+                /* Errors */
+                
+                .signup-form .messageTable .messageText {
+                	color: #FF4F1F;
+                	margin: 1rem 0;
+                    font-size: 1rem;
+                }
+                
+                .signup-form .messageTable .messageText h4 {
+                	color: #FF4F1F;
+                	font-size: 1rem;
+                	display: inline;
+                	padding-right: 5px;
+                }
+                
+                .footer {
+					background: #4E5054;
+					color: #f3f3f3;
+					font-size: .8em;
+					line-height: 1.5rem;
+					padding-top: 1rem;
+					padding-bottom: 1rem;
+					text-align: center;
+				}
+
+				.footer a {
+					color: #f3f3f3;
+					text-decoration: underline;;
+				}
+
+				.footer a:hover {
+					color: #FF4F1F;
+				}
+                
+                @media screen and (max-width: 769px) {
+					html {
+						font-size: 16px;
+					}
+
+					.page-header {
+						padding-bottom: 3rem;
+					}
+
+					.content .columns {
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+					}
+
+					.about, .signup-form {
+						width: 100%;
+					}
+
+					.signup-form {
+						margin-top: 2rem;
+						padding-bottom:  3rem;
+					}
+				}
+
+				@media screen and (max-width: 500px) {
+					html {
+						font-size:  14px;
+					}
+				}
+            </style>
+        </head>
+    
+        <body>
+            
+            <apex:form > 
+            
+                <div class="page-header">
+                    <div class="wrapper">
+                        <h1><a href="https://www.genesys.com/beyond">Genesys Beyond</a></h1>
+                        <ul>
+                            <li><a href="https://www.genesys.com/beyond/learn-more">Learn More</a></li>
+                        </ul>
+                    </div>
+                </div>
+            
+                <div class="content">
+                    <div class="wrapper">
+                        <h2>Learn, connect &mdash; go Beyond. </h2>
+                        <h3>Take CX to new heights.</h3>
+    
+                        <div class="columns">
+                            <div class="about">
+                                <p>Not a member? Now’s your chance to go Beyond what you ever thought was possible. Explore education and training opportunities or create your CX professional profile to showcase your talent...or do both. Sign up today.</p>
+                            </div>
+    
+                            <div class="signup-form">
+                                <h4>Tell us about you.</h4>
+                                
+                                <apex:pageMessages />
+                            
+                                <apex:outputpanel layout="block" rendered="{!(!hideForm)}">
+                                    <div class="field">                              
+                                        <apex:outputlabel value="First Name" for="firstName" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>
+                                            <apex:inputText id="firstName" value="{!firstName}" html-placeholder="First Name" />
+                                        </apex:outputpanel>
+                                    </div>
+                                   
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Last Name" for="lastName" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>
+                                            <apex:inputText id="lastName" value="{!lastName}" html-placeholder="Last Name"/>
+                                        </apex:outputpanel>
+                                    </div>
+                                
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Email" for="email" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>
+                                            <apex:inputText id="email" value="{!email}" html-placeholder="Email" />
+                                        </apex:outputpanel>
+                                    </div>
+                                
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Employer" for="companyName" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>
+                                            <apex:inputText id="companyName" value="{!companyName}"  html-placeholder="Employer" />
+                                        </apex:outputpanel>
+                                    </div>
+                                        
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Country" for="country" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>              
+                                            <apex:selectList id="country" value="{!selectedCountry}" size="1">
+                                                <apex:selectOptions value="{!countries}" />
+                                            </apex:selectList>                        
+                                        </apex:outputpanel>    
+                                    </div>
+                                
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Time Zone" for="timeZone" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock" />              
+                                            <apex:selectList id="timeZone" value="{!selectedTZ}" size="1">
+                                                <apex:selectOptions value="{!TimeZone}" />
+                                            </apex:selectList>                        
+                                        </apex:outputpanel>           
+                                    </div>
+                                
+                                    <div class="field"> 
+                                        <apex:outputlabel value="Contact Phone" for="contactPhone" />
+                                        <apex:outputpanel layout="block" styleClass="requiredInput">
+                                            <apex:outputpanel layout="block" styleClass="requiredBlock"/>
+                                            <apex:inputText id="contactPhone" value="{!businessPhone}" html-placeholder="Contact Phone" />
+                                        </apex:outputpanel>
+                                    </div>
+                                    
+                                    <apex:inputText styleClass="rb-h title" id="title-hb" value="{!honeyPot}" html-placeholder="Title" />
+                            
+                                    <apex:commandButton action="{!save}" value="Submit" id="sbtn" styleClass="submit"/>
+                                </apex:outputpanel>
+                                    
+                            </div><!-- .signup-form -->
+                        </div><!-- .columns -->
+                    </div><!-- .wrapper -->
+                </div><!-- .content -->    
+                
+                <div class="footer">
+                    <div class="wrapper">
+                        <p>Copyright &copy; 2019 Genesys. All Rights reserved. <a href="https://www.genesys.com/company/legal/terms-of-use">Terms of Use</a> | <a href="https://www.genesys.com/company/legal/privacy-policy">Privacy Policy</a> | <a href="https://www.genesys.com/campaign/subscribe-genesys-communications">Email Subscription</a></p>
+                    </div>
+                </div>
+            </apex:form>   
+            
+            <script
+                src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+                crossorigin="anonymous"></script>
+            <script type="text/javascript">
+                function setHeight() {
+                    var $head = $('.page-header');
+                    var $content = $('.content');
+                    var $win = $(window);
+    
+                    var mainViewHeight = $head.outerHeight() + $content.height();
+                    var heightDiff = $win.height() - mainViewHeight;
+    
+                    console.log(heightDiff);
+    
+                    if (heightDiff >= 0) {
+                        $content.height($content.height() + heightDiff);
+                    } else {
+                        $content.height('auto');
+                    }
+                }
+    
+                setHeight();
+                $(window).on('resize', setHeight);
+            </script>
+   		</body>
+	</html>
+</apex:page>

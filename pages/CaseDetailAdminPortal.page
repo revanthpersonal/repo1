@@ -1,0 +1,97 @@
+<apex:page controller="CaseDetailController" extensions="CaseOpenGSFtpExtension" sidebar="false">  
+
+ <apex:stylesheet value="{!$Resource.GenesysExtendedExternalCss}"/> 
+
+<style>
+.dataCol, .data2Col, .labelCol {
+   font-size: .9em;
+ }
+ 
+</style>
+<script>
+  function transferFiles (urlToOpen, errMsg) 
+    {  
+        if ( errMsg == "" )
+        {
+            window.open(urlToOpen, '', 'location=no,width=1300,height=900, resizable=yes');
+            return;
+        }       
+        else 
+           alert (errMsg);      
+    }
+</script>
+
+    <apex:form rendered="{!canUserAccessThisCase}">
+        <apex:sectionHeader title="Case" subtitle="{!currentCase.CaseNumber}"/>
+                    
+      <apex:pageBlock title="Status Summary" id="btn">   
+            <apex:pageBlockButtons location="top">
+         
+             <apex:commandButton value="Post Update" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=upd'; return false" rendered="{!showCloseButton}"/> 
+             <apex:commandButton value="Close Case" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=cls'; return false" rendered="{!showCloseButton}"/> 
+             <apex:commandButton value="Request to Re-open" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=opn'; return false" rendered="{!showReopenButton}"/> 
+                                       
+             <apex:commandButton action="{!genUrl}" value="Transfer Files"
+                                    oncomplete="transferFiles ('{!strUrl}', '{!msg}');"
+                                    rendered="{!showFtpButton}" reRender="none" />    
+             </apex:pageBlockButtons>
+                                    
+                <apex:pageBlockSection columns="2" >            
+                    <apex:outputField value="{!currentCase.Status}" />
+                    <apex:outputField value="{!currentCase.Priority}" />
+                    <apex:outputField value="{!currentCase.Sub_Status__c}" />
+                    <apex:outputField value="{!currentCase.Case_Owner_Portal__c}" />
+                 </apex:pageBlockSection>                                                              
+    </apex:pageBlock>  
+                  
+     <apex:pageBlock title="Case Details" >      
+            <apex:pageBlockSection columns="1">                          
+                    <apex:outputField value="{!currentCase.Subject}" style="width: 500px;"/>
+                    <apex:outputField value="{!currentCase.Description}" style="width: 500px;"/>
+            </apex:pageBlockSection>
+                  
+            <apex:pageBlockSection columns="2" >  
+                 <apex:outputField value="{!currentCase.Contact_Name__c}" />
+                 <apex:outputField value="{!currentCase.CreatedDate}" />
+                 <apex:outputField value="{!currentCase.Problem_Sub_Type__c}" />
+                 <apex:outputField value="{!currentCase.Date_Time_Last_Modified__c}" label="{!IF(currentCase.Status == 'Closed', 'Closed Date', 'Last Modified Date')}"/>           
+            </apex:pageBlockSection>                    
+    </apex:pageBlock>
+    
+     <apex:pageBlock title="Business Impact" >
+            <apex:pageBlockSection columns="1" >            
+                 <apex:outputField value="{!currentCase.Business_Impact_Product__c}" />
+                 <apex:outputField value="{!currentCase.Date_Needed__c}" />
+                  <apex:outputField value="{!currentCase.Date_Justification__c}" /> 
+            </apex:pageBlockSection>    
+    </apex:pageBlock> 
+                     
+    <apex:pageBlock title="Temporary FTP Account" rendered="{!(showTempFtpAcct && canUserAccessThisCase)}">
+        <apex:pageBlockSection columns="2">           
+           <apex:outputField value="{!currentCase.Temp_SFTP_Account_Name__c}"/>
+           <apex:outputField value="{!currentCase.FTP_Server__c}"/>
+           <apex:outputField value="{!currentCase.Temp_SFTP_Password__c}"/>
+           <apex:outputField value="{!currentCase.Temp_SFTP_Account_Expiration_Date__c}"/>
+        </apex:pageBlockSection>   
+    </apex:pageBlock>
+    
+   <apex:pageBlock >
+     <apex:pageBlockButtons location="bottom">
+         <apex:commandButton value="Post Update" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=upd'; return false" rendered="{!showCloseButton}"/> 
+     </apex:pageBlockButtons>
+    </apex:pageBlock>
+ 
+   </apex:form>              
+   
+   <c:PortalCaseFeedUpdatesList ParentCaseID="{!caseId}" />
+  
+ <br/> 
+  <apex:outputLabel value="Past Case Updates" style="font-weight:bold" rendered="{!showPastUpdates}" />
+      <apex:outputPanel rendered="{!(canUserAccessThisCase && showPastUpdates)}" title="Past Case Updates" >
+        <apex:panelGrid title="Past Case Updates" columns="1" columnClasses="left" cellpadding="0" border="0"> 
+           <apex:include pageName="CaseUpdateRelatedList"/>
+        </apex:panelGrid>
+  </apex:outputPanel>
+ 
+     
+</apex:page>

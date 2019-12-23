@@ -1,0 +1,293 @@
+<apex:page controller="ArchivedArticleSearch">
+
+<apex:stylesheet value="{!$Resource.ServiceDesk}"/>
+<apex:stylesheet value="{!$Resource.extallnotheme}"/>
+<apex:stylesheet value="{!$Resource.jqueryUiCss}"/>
+<apex:includeScript value="{!$Resource.jquery19}"/>
+<apex:includeScript value="{!$Resource.jqueryUi}"/>
+
+<script type="text/javascript">
+		var activeTab = -1;
+	</script>
+
+
+<style>
+
+	.filters{
+		margin:10px;
+	}
+
+</style>
+
+
+	<div id="loader" class="loader" style="display:none;">
+		<div class="ext-el-mask" id="ext-gen100"></div>
+		<div class="ext-el-mask-msg x-mask-loading" id="ext-gen101" style="left: 790px; top: 349px;"><div>Loading...</div></div>
+	</div>
+	<apex:pageBlock title="Filters">
+		<div class="filters">
+			Search Text: <input type="text" name="Search Text" value="" id="searchInput"/><br/>
+		</div>
+		<div class="filters">
+			From archived Date: <input type="text" name="Search Text" value="" id="datepickerFrom" style="margin-right:10px;"/>
+			To archived Date: <input type="text" name="Search Text" value="" id="datepickerTo"/><br/>
+		</div>
+		<div class="filters">
+			Article Type: 
+			<select id="selectedArticleType">
+			  <option value="All" selected="selected">All</option>
+			  <apex:repeat var="ptype" value="{!ptypes}">
+			  	<option value="{!ptype.Name}">{!ptype.DisplayName}</option>
+			  </apex:repeat>
+			</select><br/>
+		</div>
+		<div class="filters">
+			Limit: 
+			<select id="selectedLimit">
+			  <option value="150" selected="selected">150</option>
+			  <option value="50" >50</option>
+			  <option value="10" >10</option>
+			</select><br/>
+		</div>
+		<button type="button" onclick="doTextSearch();">Search</button>
+	</apex:pageBlock>
+	<apex:pageBlock title="Actions" rendered="{!canDelete || canEdit}">
+		<apex:outputtext rendered="{!canDelete}">
+			<button type="button" onclick="deleteArchiveArticles();">Delete Archived Articles</button>
+		</apex:outputtext>
+		<apex:outputtext rendered="{!canEdit}">
+			<button type="button" onclick="DraftArticles();">Restore as Draft Article</button>
+		</apex:outputtext>
+	</apex:pageBlock>
+<apex:form id="archivedForm">
+	<apex:pageMessages />
+	
+	<div id="SelectAllDiv" style="display:none;">
+		<input type="checkbox" class="filters" id="selectall" /> Select All 
+	</div>
+	<apex:variable var="noSearchResults" value="true" />
+	<div id="accordion">
+		<apex:variable var="isFirstItem" value="{!0}" />
+		<apex:repeat var="ArAr" value="{!ArchivedArticles}">
+			<apex:variable var="isFirstItem" value="{!isFirstItem+1}" />
+			<apex:outputtext rendered="{!ArAr.size >0}">
+				<h3 class="articleTypeGoesHere{!isFirstItem}"></h3>
+				<div>
+					<apex:repeat var="ArArAr" value="{!ArAr}">
+						<apex:variable var="noSearchResults" value="false" />
+			  			<script type="text/javascript">
+			  				var theId = jQuery('#{!ArArAr.kbObjectP['knowledgeArticleId']}').closest(".ui-accordion-content").attr("id");
+							jQuery('.articleTypeGoesHere{!isFirstItem}').text('{!ArArAr.type}');			  			
+			  			</script>
+							
+						<div id="{!ArArAr.kbObjectP['knowledgeArticleId']}" class="archivedArticles" style="clear:both;margin:5px;">
+							<input type="checkbox" knowledgeId="{!ArArAr.kbObjectP['knowledgeArticleId']}" class="case">  
+								<a href="javascript:srcUp('/knowledge/publishing/articleArchivedDetail.apexp?isdtp=vw&id={!ArArAr.kbObjectP['knowledgeArticleId']}');">{!ArArAr.kbObjectP['title']} </a>
+								<apex:outputText value=" {!ArArAr.kbObjectP['ArchivedDate']}"/>
+							</input>
+						</div>
+					</apex:repeat>
+				</div>
+			</apex:outputtext>
+		</apex:repeat>
+	</div>
+
+	
+	<apex:outputtext rendered="{!noSearchResults == 'true'}">
+	
+		No Search Results
+	
+	</apex:outputtext>
+	
+	<apex:outputtext rendered="{!noSearchResults == 'false'}">
+		<script type="text/javascript">
+			jQuery("#SelectAllDiv").show();
+		</script>
+	</apex:outputtext>
+	
+	
+	<apex:actionFunction name="deleteArchivedArticles" id="deleteArchivedArticles" action="{!deleteArchivedArticles}" rerender="archivedForm" oncomplete="jQuery('.loader').hide(); highlightErrors();reactivateTab();">
+    	<apex:param name="kbListToArchive"  value="" />
+    </apex:actionFunction>
+
+	<apex:actionFunction name="redraftArchivedArticles" id="redraftArchivedArticles" action="{!redraftArchivedArticles}" rerender="archivedForm" oncomplete="jQuery('.loader').hide(); highlightErrors();openNewDrafts();reactivateTab();">
+    	<apex:param name="kbListToDraft"  value="" />
+    </apex:actionFunction>
+
+	<apex:actionFunction name="doSearch" id="doSearch" action="{!doSearch}" rerender="archivedForm" oncomplete="jQuery('.loader').hide(); highlightErrors();">
+    	<apex:param name="kbSearchText"  value="" />
+    	<apex:param name="kbFromDate"  value="" />
+    	<apex:param name="kbToDate"  value="" />
+    	<apex:param name="kbArticleType"  value="" />
+    	<apex:param name="kbLimit"  value="" />
+    </apex:actionFunction>
+
+
+	<script type="text/javascript">
+		function openNewDrafts(){
+		
+			var draftIds = new Array();
+			<apex:variable var="theDraftCount" value="{!0}" />
+			<apex:repeat var="theDraft" value="{!drafts}">
+				draftIds[{!theDraftCount}] = "{!theDraft}";
+				<apex:variable var="theDraftCount" value="{!theDraftCount+1}" />
+			</apex:repeat>
+			
+			for (var i=0;i<draftIds.length;i++)
+	  		{
+	  			srcUp('/knowledge/publishing/articleDraftDetail.apexp?isdtp=vw&id=' + draftIds[i]);
+	  		}
+		
+		}
+	</script>
+
+
+	<script type="text/javascript">
+    	function deleteArchiveArticles(){
+    		
+    		if(!validateSelectedNumbers()){
+				return false;
+			}
+    		var selectedArticles;
+    		jQuery(".archivedArticles input:checked").each(function(){
+    		
+    			if(selectedArticles != null){
+    				selectedArticles += ',';
+    			}else{
+    				selectedArticles ='';
+    			}
+    			selectedArticles+=jQuery(this).attr('knowledgeId');
+    		});
+    	
+    		if(selectedArticles ==null){
+    			alert('Please select an article');
+    		}else{
+    			deleteArchivedArticles(selectedArticles);
+    			jQuery('.loader').show();
+    		}
+    	
+    	}
+    	
+	
+		function DraftArticles(){
+		
+			if(!validateSelectedNumbers()){
+				return false;
+			}
+		
+    		var selectedArticles;
+    		jQuery(".archivedArticles input:checked").each(function(){
+    		
+    			if(selectedArticles != null){
+    				selectedArticles += ',';
+    			}else{
+    				selectedArticles ='';
+    			}
+    			selectedArticles+=jQuery(this).attr('knowledgeId');
+    		});
+    	
+    		if(selectedArticles ==null){
+    			alert('Please select an article');
+    		}else{
+    			redraftArchivedArticles(selectedArticles);
+    			jQuery('.loader').show();
+    		}
+    	
+    	}
+    	
+    	function validateSelectedNumbers(){
+    	
+    		var theSelectedInputs = jQuery(".archivedArticles input:checked").length;
+    	
+    		if(theSelectedInputs == 0 ){
+    			alert('Please select an article.');
+    			return false;
+    		}else if(theSelectedInputs >149){
+    			alert('You can only batch update 150 articles per action submit.');
+    			return false;
+    		}
+    		return true;
+    	}
+	
+		function highlightErrors(){
+			jQuery(".messageText").each(function(){
+			
+				var errorText = jQuery(this).text();
+				
+				if(errorText.indexOf('---') > 0){
+					var docId = errorText.substring(errorText.indexOf('---')+3,errorText.indexOf('---')+21);
+					jQuery('#'+docId).css('background-color','red');
+					jQuery(this).text(errorText.replace('---',''));
+				}
+			
+			});
+		}
+		
+		
+		function doTextSearch(){
+			var theSearchInput = jQuery('#searchInput').val();
+			if(theSearchInput==null || theSearchInput == ''){
+				alert('Please enter a search term');
+				return false;
+			}
+			
+			var kbFromDate = jQuery('#datepickerFrom').val();
+			
+			var kbToDate = jQuery('#datepickerTo').val();
+			
+			var selectedArticleType = jQuery('#selectedArticleType option:selected').val();
+			
+			if(selectedArticleType == 'All'){
+				selectedArticleType = '';
+			}
+			var selectedLimit = jQuery('#selectedLimit option:selected').val();
+			doSearch( theSearchInput, kbFromDate, kbToDate, selectedArticleType, selectedLimit);
+			jQuery('.loader').show();
+		}
+		
+		
+		// add multiple select / deselect functionality
+	    
+		
+	
+		jQuery(function() {
+		   jQuery( "#accordion" ).accordion({ heightStyle: "content" });
+		    jQuery( "#datepickerFrom" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		     jQuery( "#datepickerTo" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		     
+		     
+		     jQuery("#selectall").click(function () {
+		          jQuery('.case').prop('checked', jQuery(this).prop('checked'));
+		    });
+		 
+		    // if all checkbox are selected, check the selectall checkbox
+		    // and viceversa
+		    jQuery(".case").click(function(){
+	 
+		        if(jQuery(".case").length == jQuery(".case:checked").length) {
+		            jQuery("#selectall").attr("checked", "checked");
+		        } else {
+		            jQuery("#selectall").removeAttr("checked");
+		        }
+		 
+		    });
+		     
+		     
+		     $( "#accordion" ).on( "accordionactivate", function( event, ui ) { 
+		     		activeTab = $( "#accordion" ).accordion( "option", "active" );
+		     	} );
+		     	
+		     
+		     
+		 });
+	
+	
+		function reactivateTab(){
+			if(activeTab != -1){
+		     	$( "#accordion" ).accordion( "option", "active", activeTab );
+		     }
+		}
+	
+	</script>
+</apex:form>
+</apex:page>

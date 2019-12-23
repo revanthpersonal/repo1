@@ -1,0 +1,3 @@
+<apex:page standardController="Account_Billing_Info__c" standardStylesheets="false" readOnly="true" renderAs="pdf" applyBodyTag="false">
+    <c:CloudAccountBillingComponent accountBillingId="{!Account_Billing_Info__c.Id}"/>
+</apex:page>

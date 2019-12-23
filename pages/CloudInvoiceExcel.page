@@ -1,0 +1,3 @@
+<apex:page standardController="Invoice__c" contentType="application/vnd.ms-excel#{!Invoice__c.Invoice_Number__c}.xls" cache="true" showHeader="false">
+    <c:CloudInvoiceComponent invoiceId="{!Invoice__c.Id}" isExcel="true"/>
+</apex:page>

@@ -1,0 +1,194 @@
+<apex:page standardController="Contact" extensions="CreateMultipleSupAcsForContactController" >
+  
+<script type="text/javascript">
+    function checkAll(cb,cbid)
+        {
+            var inputElem = document.getElementsByTagName("input");                    
+            for(var i=0; i<inputElem.length; i++)
+            {            
+                 if(inputElem[i].id.indexOf(cbid)!=-1){                                       
+                    inputElem[i].checked = cb.checked;
+                }
+            }
+        }
+</script>
+
+<apex:form id="frm">
+         <apex:pageBlock >
+            <apex:pageMessages id="msg"/>
+            
+            <apex:outputLink value="/{!contactId}" id="theLink">Return to Contact</apex:outputLink>
+                              
+            <apex:pageBlockSection columns="1">  
+                  <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Contact Name" />
+                    <apex:outputField value="{!Contact.Name}"/> 
+                  </apex:pageBlockSectionItem>
+ 
+                  <apex:outputPanel >              
+                       <apex:selectRadio value="{!selectedCloudPrem}" id="chooseType" style="margin-left: 50px;" >  
+                           <apex:selectOption itemLabel="On-Premises Licenses" itemValue="Premise"/>                    
+                           <apex:selectOption itemLabel="Cloud Subscriptions" itemValue="Cloud"/>  
+                           <apex:actionSupport event="onchange" action="{!changeType}" reRender="frm" />
+                      </apex:selectRadio>            
+                  </apex:outputPanel>  
+                
+            <apex:pageBlockSection >   
+               <apex:pageBlockSection columns="1">                         
+                  <apex:selectList id="status" value="{!saStatus}" size="1" label="Support Access Status" style="width: 150px">
+                    <apex:selectOption itemLabel="--None--" itemvalue=""/>
+                    <apex:selectOption itemValue="Active" itemLabel="Active"/>
+                    <apex:selectOption itemValue="Inactive" itemLabel="Inactive"/>
+                  </apex:selectList>                              
+                  <apex:selectList id="level" value="{!saAccessLevel}" size="1" label="Support Access Level" style="width: 150px">
+                    <apex:selectOption itemLabel="--None--" itemvalue=""/>
+                    <apex:selectOption itemValue="Read/Write" itemLabel="Read/Write"/>
+                    <apex:selectOption itemValue="Read Only" itemLabel="Read Only"/>
+                    <apex:selectOption itemValue="Basic" itemLabel="Basic"/>
+                  </apex:selectList> 
+                
+               </apex:pageBlockSection>    
+               
+               <apex:pageBlockSection columns="1">      
+                                                                  
+                  <apex:inputTextarea value="{!saStatusComment}" label="Status Comment" style="width: 150px"/> 
+                  <apex:inputText value="{!saCaseNum}" label="Case Number" style="width: 150px" />
+                    <apex:inputField value="{!dummySa.Expiration_Date__c}" style="width: 150px" />   
+                  <apex:inputField value="{!dummySa.Support_Owner__c}" style="width: 150px" rendered="{!isPremise }"/>
+               </apex:pageBlockSection>    
+                     
+          </apex:pageBlockSection> 
+                                           
+            <br/>
+              <!--- PREMISES --->
+      
+               <apex:pageBlockSectionItem id="sctprm" rendered="{!isPremise }">
+                    <apex:outputPanel >
+                        <apex:outputLabel value="Show Closed " >  
+                            <apex:inputCheckbox value="{!showClosed }" id="chk"/>
+                         </apex:outputLabel>
+                    </apex:outputPanel> 
+                    <apex:outputPanel id="prem" > 
+                         <apex:outputLabel value="ST or EU Name " >    
+                             <apex:inputText value="{!accountSearch}" size="25"/>
+                          </apex:outputLabel>
+                         <apex:commandButton action="{!getBackOfficeAcconts}" value="Find BOAs" reRender="blkprm, msg"/>
+                    </apex:outputPanel>                     
+               </apex:pageBlockSectionItem> 
+           
+                <apex:pageBlockSection columns="1" rendered="{!isPremise }" >    
+                  <apex:pageBlockSectionItem >    
+                    <apex:outputPanel id="prempltf" style="margin-left:230px"> 
+                         <apex:outputLabel value="Platform " >    
+                            <apex:selectList value="{!platformSearch}" size="1">
+                                <apex:selectOptions value="{!boaPlatforms}"/>
+                            </apex:selectList>
+                         </apex:outputLabel>
+                    </apex:outputPanel>
+                  </apex:pageBlockSectionItem>    
+                </apex:pageBlockSection> 
+                                                             
+                <apex:pageBlockSection rendered="{!isPremise }">
+                    <apex:commandButton action="{!addSupportAccessRecords}" value="Add Support Access for Selected BOA" 
+                     style="margin-left: 10px; color:red; font-weight:bold;  border: 2px solid #07c"/>                    
+               </apex:pageBlockSection>
+               <!--- END PREMISES --->
+         
+               <!--- CLOUD --->
+                  <apex:pageBlockSectionItem id="sctcld" rendered="{!isCloud}">
+                    <apex:outputPanel >
+                        <apex:outputLabel value="Show Inactive  " />  
+                        <apex:inputCheckbox value="{!showClosedCloud}" />
+                    </apex:outputPanel>             
+                    <apex:outputPanel > 
+                         <apex:outputLabel value="ST or EU or Cloud Deployment Name  " />    
+                         <apex:inputText value="{!accountDeplSearch}" size="25"/>
+                         <apex:commandButton action="{!getCloudDeployments}" value="Find Cloud Deployments" reRender="blkcld, msg"/>
+                    </apex:outputPanel>                     
+               </apex:pageBlockSectionItem> 
+             </apex:pageBlockSection>
+             
+              <apex:pageBlockSection columns="1" rendered="{!isCloud}" >    
+                  <apex:pageBlockSectionItem >    
+                    <apex:outputPanel id="cldpltf" style="margin-left:360px"> 
+                         <apex:outputLabel value="Platform " >    
+                           <apex:selectList value="{!platformCldSearch}"  size="1">
+                                <apex:selectOptions value="{!cloudPlatforms}"/>
+                            </apex:selectList>                            
+                         </apex:outputLabel>
+                    </apex:outputPanel>
+                  </apex:pageBlockSectionItem>    
+               </apex:pageBlockSection> 
+                
+              <apex:pageBlockSection rendered="{!isCloud}">
+                    <apex:commandButton action="{!addSupportAccessCloudRecords}" 
+                    style="margin-left: 10px; color:red; font-weight:bold;  border: 2px solid #07c" value="Add Support Access for Selected Cloud Deployment" />                    
+               </apex:pageBlockSection>
+            <!-- END CLOUD -->
+           </apex:pageBlock>  
+                         
+           <apex:pageBlock id="blkprm" rendered="{!!isCloud}">           
+            <apex:pageBlockTable value="{!addBoaList}" var="boa" id="lst">
+                     <apex:column >
+                        <apex:facet name="header">
+                                <apex:inputCheckbox onclick="checkAll(this,'sel')" />
+                        </apex:facet>
+                        <apex:inputCheckbox id="sel" value="{!boa.isSelected}" /> 
+                    </apex:column>
+                    <apex:column headerValue="Back Office Account">
+                        <apex:outputLink value="/{!boa.obj['Id']}" target="_blank" >{!boa.obj['Name']}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="End User Account">                
+                          <apex:outputLink value="/{!boa.obj['End_User_Account__c']}" target="_blank">{!boa.obj['End_User_Name__c']}</apex:outputLink> 
+                    </apex:column>                  
+                    <apex:column headerValue="Sold To Account">                     
+                        <apex:outputLink value="/{!boa.obj['Sold_To_Account__c']}" target="_blank">{!boa.obj['Sold_To_Name__c']}</apex:outputLink>
+                    </apex:column>  
+                     <apex:column headerValue="Access Approval">
+                        <apex:outputField value="{!boa.obj['Access_Approval__c']}" />
+                    </apex:column>           
+                    <apex:column headerValue="Service Contract Status">
+                        <apex:outputText value="{!boa.obj['Contract_Status__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="Platform">
+                        <apex:outputText value="{!boa.obj['Platform__c']}" />
+                    </apex:column>
+                </apex:pageBlockTable>               
+         </apex:pageBlock>
+   <!--- END PREMISES ---> 
+   
+   <!-- CLOUD  ---->
+           <apex:pageBlock id="blkcld" rendered="{!isCloud}">           
+            <apex:pageBlockTable value="{!addClDeplList}" var="cld" id="lst">
+                     <apex:column >
+                        <apex:facet name="header">
+                                <apex:inputCheckbox onclick="checkAll(this,'sel')" />
+                        </apex:facet>
+                        <apex:inputCheckbox id="sel" value="{!cld.isSelected}" /> 
+                    </apex:column>
+                    <apex:column headerValue="Deployment Name">
+                        <apex:commandLink action="/{!cld.obj['Id']}"  target="_blank" >{!cld.obj['Name']}</apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="End User Account">
+                        <apex:commandLink action="/{!cld.obj['Account__c']}" target="_blank" >{!cld.obj['Account__r.Name']}</apex:commandLink>
+                    </apex:column>
+          
+                    <apex:column headerValue="Sold To Account">
+                        <apex:commandLink action="/{!cld.obj['Sold_To_Account__c']}" target="_blank" >{!cld.obj['Sold_To_Account__r.Name']}</apex:commandLink>
+                    </apex:column>
+    
+                    <apex:column headerValue="Access Approval">
+                        <apex:outputField value="{!cld.obj['Access_Approval__c']}" />
+                    </apex:column>                                                   
+                    <apex:column headerValue="Support Status">
+                        <apex:outputText value="{!cld.obj['Support_Status__c']}" />
+                    </apex:column>  
+                    <apex:column headerValue="Cloud Platform">
+                        <apex:outputText value="{!cld.obj['Cloud_Platform__c']}" />
+                    </apex:column>                    
+                </apex:pageBlockTable>               
+         </apex:pageBlock>
+   <!--- END CLOUD ---->
+</apex:form>
+
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page controller="CasesClosedByDefaultController" readOnly="true">
+    <apex:pageBlock title="Cases Closed by Default">
+        <apex:outputLabel value="Selected Period:" style="font-weight:bold;"></apex:outputLabel>
+        <apex:outputLabel value="{!period}"></apex:outputLabel>
+        <br/><br/>
+        <apex:pageBlockTable value="{!CCBDDetails}" var="ccbdr">
+            <apex:column headerValue="Case Number" value="{!ccbdr.caseNumber}" width="250px"/>
+            <!--
+            <apex:column headerValue="Contact Name" value="{!ccbdr.contactName}"/>
+            -->
+            <apex:column headerValue="Contact Name" value="{!ccbdr.ownerName}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

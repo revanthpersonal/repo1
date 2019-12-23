@@ -1,0 +1,40 @@
+<apex:page standardController="Genesys_Case_Updates__c" extensions="CaseCommentExtension">    
+    <apex:form id="frm">
+    <apex:pageMessages />
+        <apex:outputPanel style="height:10px;">
+            &nbsp;
+            <apex:actionstatus id="status">
+                <apex:facet name="start">
+                    <apex:outputLabel value="Working, Please wait." style="color:blue;font-weight:bold;"/>
+                </apex:facet>
+            </apex:actionstatus>
+        </apex:outputPanel>
+
+        <apex:pageBlock id="pb">
+            <apex:pageBlockButtons id="pbb" location="bottom">
+                
+                <apex:commandButton id="btnSave" action="{!saveClose}" value="Close Case" />
+                <apex:commandButton id="btnCancel" action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+           
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                   <apex:outputLabel value="Status:"/>
+                   <apex:outputLabel value="Closed" style="font-weight: bold"/>   
+                </apex:pageBlockSectionItem>                                       
+                       
+                <apex:selectList id="SubStatus" label="Sub Status" value="{!selectedSubStatClose}" size="1" required="false" >
+                      <apex:selectOptions value="{!SubStatusClose}"/>
+                </apex:selectList> 
+                <br/>
+                
+                <apex:inputField value="{!newCaseUpdate.Name}"  required="false" rendered="{!ISPICKVAL($User.UserType,'Standard')}"/> 
+                <apex:inputField id="desc" required="false" value="{!newCaseUpdate.Description__c}" label="Closure Comment" />
+
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

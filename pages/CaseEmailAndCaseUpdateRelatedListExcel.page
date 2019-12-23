@@ -1,0 +1,24 @@
+<apex:page controller="CaseEmailCaseUpdateRelatedListController" cache="false" showHeader="false" sidebar="false" contenttype="application/vnd.ms-excel#CaseDetail-{!currentCase.CaseNumber}.xls">
+    <apex:Datatable value="{!result}" var="eachRecord" >
+        <apex:column headerValue="Update Type">
+            {!eachRecord.updateType}
+        </apex:column>
+        <apex:column headerValue="Public" rendered="{!NOT(isPortal)}">
+            {!eachRecord.isPublic}
+        </apex:column>                    
+        <apex:column headerValue="Date">
+            <apex:outputText value="{0,date,MM.dd.yyyy HH:mm:ss}" >
+                <apex:param value="{!eachRecord.dt}" />
+            </apex:outputText>
+        </apex:column>      
+        <apex:column headerValue="Created By">
+            {!eachRecord.createdBy}
+        </apex:column>      
+        <apex:column headerValue="Type">
+            {!eachRecord.uType}
+        </apex:column>              
+        <apex:column headerValue="Description/Subject">
+            {!eachRecord.fullDescriptionPlainText}
+        </apex:column>
+    </apex:Datatable>
+</apex:page>

@@ -1,0 +1,2 @@
+<apex:page sidebar="false" showHeader="false" standardController="Business_Segment__c" action="{!URLFOR('/a0C/e', null, ['Name'='.', 'retURL'='/a0C/o'], true)}">
+</apex:page>

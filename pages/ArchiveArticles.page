@@ -1,0 +1,14 @@
+<apex:page controller="archiveArticles" action="{!thearchiveArticles}">
+
+<apex:form id="page" >
+	{!recordsNumber}
+    <apex:actionFunction name="reloadIt" action="{!reloadIt}"   rerender="page" / >
+
+</apex:form>
+    
+<script>
+setTimeout(function(){reloadIt()},10000);
+
+</script>
+
+</apex:page>

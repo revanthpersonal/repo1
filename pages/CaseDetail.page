@@ -1,0 +1,197 @@
+<apex:page controller="CaseDetailController" extensions="CaseOpenGSFtpExtension" sidebar="false">  
+
+<!--
+ <apex:stylesheet value="{!$Resource.GenesysExtendedExternalCss}"/> 
+-->
+
+<style>
+.dataCol, .data2Col, .labelCol {
+   font-size: .9em;
+ }
+.helpTxt {
+  font-size: .9em;
+  font-style: italic;
+{
+ 
+</style>
+<script>
+  function transferFiles (urlToOpen, errMsg) 
+    {  
+        if ( errMsg == "" )
+        {
+            window.open(urlToOpen, '', 'location=no,width=1300,height=900, resizable=yes');
+            return;
+        }       
+        else 
+           alert (errMsg);      
+    }
+    
+    function openChat(urlToOpen, errMsg) 
+    {  
+        if ( errMsg == "" )
+        {
+            window.open(urlToOpen, '', 'top=200,left=500,width=600,height=700');
+            return;
+        }       
+        else 
+           alert (errMsg);    
+    }
+</script>
+
+    <apex:form rendered="{!canUserAccessThisCase}">
+        <apex:sectionHeader title="Case" subtitle="{!currentCase.CaseNumber}"/>
+                    
+      <apex:pageBlock title="Status Summary" id="btn">   
+            <apex:pageBlockButtons location="top">
+      
+             <apex:commandButton value="Post Update" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=upd'; return false" rendered="{!showCloseButton}"/> 
+             <apex:commandButton value="Close Case" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=cls'; return false" rendered="{!showCloseButton}"/> 
+             <apex:commandButton value="Request to Re-open" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=opn'; return false" rendered="{!showReopenButton}"/> 
+                        
+             <apex:commandButton action="{!genUrl}" value="Transfer Files"
+                                    oncomplete="transferFiles ('{!strUrl}', '{!msg}');"
+                                    rendered="{!showFtpButton}" reRender="none" />  
+                                   
+             <apex:commandButton action="{!liveChat}" value="Request Chat"
+                                    oncomplete="openChat ('{!JSENCODE(liveChUrl)}', '{!liveChMsg}');"
+                                    rendered="{!showLiveChatButton}" reRender="none" />
+                                     
+            </apex:pageBlockButtons>
+           
+            <apex:pageBlockSection columns="2" rendered="{!currentCase.RecordType.DeveloperName == 'Genesys_Feature_Request_Case'}">
+                <apex:outputField value="{!currentCase.Status}"/>
+                <apex:outputField value="{!currentCase.Priority}"/>
+                <apex:outputField value="{!currentCase.Sub_Status__c}"/> 
+                <apex:outputField value="{!currentCase.Case_Owner_Portal__c}"/>           
+           <!-- substatus help --> 
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusNewHelp}" rendered="{!AND(currentCase.Status ='Open - Product Management',currentCase.Sub_Status__c = 'New')}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusInfoFromCustomerHelp}" rendered="{!AND(currentCase.Status ='Open - Product Management',currentCase.Sub_Status__c == 'Info Required From Customer')}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusUnderCosiderationHelp}" rendered="{!currentCase.Sub_Status__c == 'Under Consideration'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusPlannedRoadmapHelp}" rendered="{!currentCase.Sub_Status__c == 'Planned on Roadmap'}" styleClass="helpTxt orangetext" label=" "/>               
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusCommittedHelp}" rendered="{!currentCase.Sub_Status__c == 'Committed In Development'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusWillNotImplementHelp}" rendered="{!currentCase.Sub_Status__c == 'Will Not Implement'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusDuplicateHelp}" rendered="{!currentCase.Sub_Status__c == 'Duplicate'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusImplementedHelp}" rendered="{!currentCase.Sub_Status__c == 'Implemented'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusCanceledHelp}" rendered="{!currentCase.Sub_Status__c == 'Cancelled'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusOtherResolutionHelp}" rendered="{!currentCase.Sub_Status__c == 'Other Resolution'}" styleClass="helpTxt orangetext" label=" "/>               
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusCareNewHelp}" rendered="{!AND(currentCase.Status ='Open - Customer Care',OR(currentCase.Sub_Status__c = 'New',currentCase.Sub_Status__c = 'Investigation',currentCase.Sub_Status__c = 'Maintenance Review',currentCase.Sub_Status__c = 'Third Party Pending'))}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusCareInfoFromCustomerHelp}" rendered="{!AND(currentCase.Status ='Open - Customer Care',currentCase.Sub_Status__c == 'Info Required From Customer')}" styleClass="helpTxt orangetext" label=" "/>              
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusSolProposedHelp}" rendered="{!currentCase.Sub_Status__c == 'Solution Proposed'}" styleClass="helpTxt orangetext" label=" "/>               
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusReopenHelp}" rendered="{!currentCase.Sub_Status__c == 'Customer Requested to Re-open'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusAutoFollowHelp}" rendered="{!currentCase.Sub_Status__c == 'Auto Follow-Up'}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusClosedByCustomerHelp}" rendered="{!AND(currentCase.Sub_Status__c == 'Resolved',currentCase.Status=='Closed')}" styleClass="helpTxt orangetext" label=" "/>
+                <apex:outputText value="***{!$Label.CustPortalFRsubstatusMovedToIdeasHelp}" rendered="{!currentCase.Sub_Status__c == 'Moved to Ideas Lab'}" styleClass="helpTxt orangetext" label=" "/>
+                                                              
+          <!-- end substatus help -->               
+                <apex:outputField value="{!currentCase.PM_Owner_Portal__c}"/>
+     
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" rendered="{!NOT(currentCase.RecordType.DeveloperName == 'Genesys_Feature_Request_Case')}">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_Product_Portal_Status}" var="f">
+                    <apex:outputField value="{!currentCase[f]}" />
+                </apex:repeat>
+            </apex:pageBlockSection>          
+     </apex:pageBlock>  
+     <apex:pageBlock title="Case Detail" >
+            <apex:pageBlockSection columns="1" rendered="{!currentCase.Security_Threat__c}"> 
+                <apex:outputField value="{!currentCase.Security_Threat__c}" />
+             </apex:pageBlockSection> 
+            <apex:pageBlockSection columns="1">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_Subj_Descr_Portal}" var="f">
+                    <apex:outputField value="{!currentCase[f]}" style="width: 500px;"/>
+                </apex:repeat>
+            </apex:pageBlockSection>
+            
+             <apex:pageBlockSection columns="2" rendered="{!currentCase.RecordType.DeveloperName == 'Genesys_Product_Case'}">         
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_Product_Portal_CaseDetail}" var="f">                  
+                    <apex:outputField value="{!currentCase[f]}" label="{!IF(AND(f.FieldPath=='Date_Time_Last_Modified__c', currentCase.Status == 'Closed'), 'Closed Date', f.Label)}"/>
+                </apex:repeat>
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" rendered="{!currentCase.RecordType.DeveloperName == 'Premises_Service_Request'}">         
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_Portal_Prem_Service_Req}" var="f">                  
+                    <apex:outputField value="{!currentCase[f]}" label="{!IF(AND(f.FieldPath=='Date_Time_Last_Modified__c', currentCase.Status == 'Closed'), 'Closed Date', f.Label)}"/>
+                </apex:repeat>
+            </apex:pageBlockSection>
+     
+
+             <apex:pageBlockSection columns="2" rendered="{!currentCase.RecordType.DeveloperName == 'Genesys_Feature_Request_Case'}">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_FR_Portal_CaseDetail}" var="f">
+                    <apex:outputField value="{!currentCase[f]}" label="{!IF(AND(f.FieldPath=='Date_Time_Last_Modified__c', currentCase.Status == 'Closed'), 'Closed Date', f.Label)}"/>
+                </apex:repeat>
+            </apex:pageBlockSection>
+   
+    </apex:pageBlock>
+
+         <apex:pageBlock rendered="{!currentCase.RecordType.DeveloperName == 'Genesys_Product_Case'}">
+            <apex:pageBlockSection columns="1">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_View_SP_SC_2}" var="f">
+                    <apex:outputField value="{!currentCase[f]}" />
+                </apex:repeat>          
+            </apex:pageBlockSection>    
+    </apex:pageBlock> 
+  
+    <apex:pageBlock title="Business Requirements and Use Cases" rendered="{!currentCase.RecordType.DeveloperName == 'Genesys_Feature_Request_Case'}">
+            <apex:pageBlockSection columns="1" >            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_View_FR_SC}" var="f">
+                    <apex:outputField value="{!currentCase[f]}"/>
+                </apex:repeat>          
+            </apex:pageBlockSection>    
+    </apex:pageBlock> 
+  
+ 
+    <apex:pageBlock title="Legacy Reference Numbers" rendered="{!AND(canUserAccessThisCase, currentCase.RecordType.DeveloperName <> 'Premises_Service_Request')}"> 
+     <!-- Legacy# -->
+        <apex:pageBlockSection columns="2" rendered="{!(currentCase.RecordType.DeveloperName <> 'Genesys_Feature_Request_Case')}">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_Product_Portal_Additional_In}" var="f">
+                    <apex:outputField value="{!currentCase[f]}"/>
+                </apex:repeat>
+         </apex:pageBlockSection>
+         
+     <!-- Legacy#, Siebel Id --->
+         <apex:pageBlockSection columns="2" rendered="{!currentCase.RecordType.DeveloperName = 'Genesys_Feature_Request_Case'}">            
+                <apex:repeat value="{!$ObjectType.Case.FieldSets.Case_Detail_FR_Portal_Additional_Info}" var="f">
+                    <apex:outputField value="{!currentCase[f]}"/>
+                </apex:repeat> 
+         </apex:pageBlockSection>     
+    </apex:pageBlock>
+     
+    <apex:pageBlock title="Temporary FTP Account" rendered="{!(showTempFtpAcct && canUserAccessThisCase)}">
+        <apex:pageBlockSection columns="2">           
+           <apex:outputField value="{!currentCase.Temp_SFTP_Account_Name__c}"/>
+           <apex:outputField value="{!currentCase.FTP_Server__c}"/>
+           <apex:outputField value="{!currentCase.Temp_SFTP_Password__c}"/>
+           <apex:outputField value="{!currentCase.Temp_SFTP_Account_Expiration_Date__c}"/>
+        </apex:pageBlockSection>   
+    </apex:pageBlock>
+ 
+     <apex:pageBlock title="Case Attachments" rendered="{!attachm.size>0 && currentCase.RecordType.DeveloperName <> 'Genesys_Feature_Request_Case'}">
+        <apex:pageBlockSection columns="1" >
+             <apex:pageBlocktable value="{!attachm}" var="at" >  
+                  <apex:column >
+                        <apex:outputLink value="{!URLFOR($Action.Attachment.Download, at.Id)}" 
+                                 target="_blank" style="text-decoration:underline">{!at.Name}</apex:outputLink>
+                  </apex:column>  
+             </apex:pageBlocktable>
+        </apex:pageBlockSection>
+   </apex:pageBlock>
+ 
+      <apex:pageBlock >
+     <apex:pageBlockButtons location="bottom">
+         <apex:commandButton value="Post Update" onclick="window.top.location.href='/customercare/PortalNewCaseFeedUpdate?cs={!currentCase.Id}&tp=upd'; return false" rendered="{!showCloseButton}"/> 
+     </apex:pageBlockButtons>
+    </apex:pageBlock>
+
+   </apex:form>              
+  
+   <c:PortalCaseFeedUpdatesList ParentCaseID="{!caseId}" />
+  
+  <br/> 
+  <apex:outputLabel value="Past Case Updates" style="font-weight:bold" rendered="{!showPastUpdates}" />
+      <apex:outputPanel rendered="{!(canUserAccessThisCase && showPastUpdates)}" title="Past Case Updates" >
+        <apex:panelGrid title="Past Case Updates" columns="1" columnClasses="left" cellpadding="0" border="0"> 
+           <apex:include pageName="CaseUpdateRelatedList"/>
+        </apex:panelGrid>
+  </apex:outputPanel>
+
+</apex:page>

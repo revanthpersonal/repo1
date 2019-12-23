@@ -1,0 +1,85 @@
+<apex:page standardController="Cloud_Deployment__c" extensions="CloudDeploymentSLTsetup">
+
+<apex:form id="pgblk">  
+    <apex:pageBlock title="{!currentSlt.Name}" >
+        <apex:pageMessages />
+       
+        <apex:pageBlockButtons location="top">
+            <apex:commandButton value="Override with Custom SLTs" action="{!addCustomSlt}" rendered="{!AND(currentSltType=='template',mode=='view')}" reRender="pgblk"/>             
+            <apex:commandButton value="Save" action="{!saveCustSlt}" rendered="{!mode=='edit'}" reRender="pgblk"/>            
+            <apex:commandButton value="Revert to Support Package Standard SLTs" action="{!removeCustomSlt}" rendered="{!AND(currentSltType=='custom',mode=='view')}" reRender="pgblk"/>
+            <apex:commandButton value="Edit" action="{!editCustom}" rendered="{!AND(currentSltType=='custom',mode=='view')}" reRender="pgblk"/>                        
+            <apex:commandButton value="Cancel" action="{!actCancel}"  rendered="{!mode == 'edit'}" reRender="pgblk"/>
+        </apex:pageBlockButtons>
+ 
+          <!---- Details Section -->
+         <apex:pageBlockSection columns="1" rendered="{!mode == 'view'}" title="Details" collapsible="false">   
+          
+             <apex:outputLabel value="SLT Type" style="margin-left:70px;">
+                <apex:outputText value="{!currentSlt.SLT_Level__c}" style="margin-left:30px;" rendered="{!currentSltType=='template'}"/>
+                <apex:outputText value="Custom SLT - {!currentSlt.Cloud_Deployment__r.Name}" style="margin-left:30px;" rendered="{!currentSltType=='custom'}"/>
+             </apex:outputLabel>   
+             
+               <apex:outputLabel value="SLT Name" for="slt" style="margin-left:70px;">
+                   <apex:outputLink value="/{!currentSlt.Id}" id="slt" target="_blank" style="margin-left:30px;">{!currentSlt.Name}</apex:outputLink>
+              </apex:outputLabel>
+     
+       </apex:pageBlockSection>
+       
+      <apex:pageBlockSection columns="3" rendered="{!mode == 'view'}" >         
+         <apex:pageBlockSection columns="1" title="Response Targets" collapsible="false">  
+           <apex:outputField value="{!currentSlt.Response_Production_Down__c}" />
+            <apex:outputField value="{!currentSlt.Response_Critical__c}" />
+            <apex:outputField value="{!currentSlt.Response_High__c}" />
+            <apex:outputField value="{!currentSlt.Response_Medium__c}" />
+            <apex:outputField value="{!currentSlt.Response_Low__c}" />              
+         </apex:pageBlockSection> 
+               
+         <apex:pageBlockSection columns="1" title="Resolution Targets" collapsible="false">             
+           <apex:outputField value="{!currentSlt.Resolution_Production_Down__c}" />   
+            <apex:outputField value="{!currentSlt.Resolution_Critical__c}" />       
+            <apex:outputField value="{!currentSlt.Resolution_High__c}" />
+             <apex:outputField value="{!currentSlt.Resolution_Medium__c}" />      
+            <apex:outputField value="{!currentSlt.Resolution_Low__c}" />            
+         </apex:pageBlockSection>
+         
+          <apex:pageBlockSection columns="1" title="Restoration Targets" collapsible="false">  
+           <apex:outputField value="{!currentSlt.Restoration_Production_Down__c}" />  
+            <apex:outputField value="{!currentSlt.Restoration_Critical__c}" />       
+            <apex:outputField value="{!currentSlt.Restoration_High__c}" />
+             <apex:outputField value="{!currentSlt.Restoration_Medium__c}" />      
+            <apex:outputField value="{!currentSlt.Restoration_Low__c}" />            
+          </apex:pageBlockSection>  
+                  
+       </apex:pageBlockSection>                   
+   
+       <apex:pageBlockSection columns="3" rendered="{!mode == 'edit'}" >         
+         <apex:pageBlockSection columns="1" title="Response Targets" collapsible="false">            
+            <apex:inputField value="{!currentSlt.Response_Production_Down__c}" />
+            <apex:inputField value="{!currentSlt.Response_Critical__c}" />
+            <apex:inputField value="{!currentSlt.Response_High__c}" />
+            <apex:inputField value="{!currentSlt.Response_Medium__c}" />
+            <apex:inputField value="{!currentSlt.Response_Low__c}" />              
+         </apex:pageBlockSection> 
+         
+          <apex:pageBlockSection columns="1" title="Resolution Targets" collapsible="false">               
+           <apex:inputField value="{!currentSlt.Resolution_Production_Down__c}" />  
+            <apex:inputField value="{!currentSlt.Resolution_Critical__c}" />       
+            <apex:inputField value="{!currentSlt.Resolution_High__c}" />
+            <apex:inputField value="{!currentSlt.Resolution_Medium__c}" />      
+            <apex:inputField value="{!currentSlt.Resolution_Low__c}" />            
+         </apex:pageBlockSection> 
+         
+         <apex:pageBlockSection columns="1" title="Restoration Targets" collapsible="false">          
+           <apex:inputField value="{!currentSlt.Restoration_Production_Down__c}" /> 
+            <apex:inputField value="{!currentSlt.Restoration_Critical__c}" />       
+            <apex:inputField value="{!currentSlt.Restoration_High__c}" />
+            <apex:inputField value="{!currentSlt.Restoration_Medium__c}" />      
+            <apex:inputField value="{!currentSlt.Restoration_Low__c}" />            
+         </apex:pageBlockSection>  
+      </apex:pageBlockSection>
+
+    </apex:pageBlock>
+</apex:form>
+ 
+</apex:page>

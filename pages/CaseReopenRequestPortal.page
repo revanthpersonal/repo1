@@ -1,0 +1,20 @@
+<apex:page standardController="Genesys_Case_Updates__c" extensions="CaseCommentExtension">    
+    <apex:form id="frm">
+    <apex:pageMessages />
+        <br/>
+        <apex:outputText value="Request to Re-open Case# {!cs.CaseNumber}" style="font-weight:bold;"/> 
+        <br/>
+        <apex:pageBlock mode="edit" id="pb">       
+            <apex:pageBlockButtons id="pbb" location="bottom">                
+                <apex:commandButton id="btnSave" action="{!reopenCase}" value="Submit" />
+                <apex:commandButton id="btnCancel" action="{!cancel}" value="Cancel"/>
+            </apex:pageBlockButtons>
+         
+            <apex:pageBlockSection columns="1">             
+                <apex:inputField id="desc" required="true" value="{!newCaseUpdate.Description__c}" label="Reason for Re-opening" />
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+</apex:page>

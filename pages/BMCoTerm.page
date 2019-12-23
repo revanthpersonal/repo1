@@ -1,0 +1,355 @@
+<apex:page standardController="BigMachines__Quote__c"
+    extensions="BMCoTermController" sidebar="false">
+    <apex:form >
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+    
+        <apex:includeScript value="{!$Resource.LookupPopUp}" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('div[id$=findRR] div table tr td').className = '';
+                $('div[id$=findRR] div table tr td').removeClass('dataCol');
+            });
+        </script>
+        <apex:pageBlock >
+        <apex:pageBlockSection columns="1">
+            <apex:outputLink value="/{!quo.Id}" style="font-weight: bolder;font-size: larger;">{!quo.Name}</apex:outputLink>
+        </apex:pageBlockSection>
+        
+         <apex:pageBlockSection title="Quote" columns="3" id="findRR1">
+          <apex:inputField value="{!quo.Search_Quote__c}"/>
+         </apex:pageBlockSection>
+            
+            <apex:pageBlockSection title="Accounts" columns="3" id="findRR">
+                <apex:commandButton id="go" value="Go" action="{!findRelatedRecords}" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Sold To" />
+                    <apex:outputPanel >
+                        <apex:inputHidden value="{!soldToAcc.Id}" id="targetId" />
+                        <apex:inputText value="{!soldToAcc.Name}" id="targetName"
+                            disabled="false" />
+                        <a href="#"
+                            onclick="openLookupPopup('{!$Component.targetName}', '{!$Component.targetId}', '{!fields},status__c,Country__c,RecordType__c', '', '', '001'); return false">
+                            <img onmouseover="this.className='lookupIconOn';"
+                            alt="Account Name Lookup (New Window)"
+                            onmouseout="this.className='lookupIcon';" class="lookupIcon"
+                            src="/s.gif" /> </a>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="endUserAcc">
+                    <apex:outputLabel value="End User" />
+                    <apex:outputPanel >
+                        <apex:inputHidden value="{!endUserAcc.Id}" id="newtargetId" />
+                        <apex:actionRegion >
+                            <apex:inputText value="{!endUserAcc.Name}" id="newtargetName">
+                                <apex:actionSupport event="onchange" rerender="endUserAcc" />
+                            </apex:inputText>
+                        </apex:actionRegion>
+                        <a href="#"
+                            onclick="openLookupPopup('{!$Component.newtargetName}', '{!$Component.newtargetId}', '{!fields},status__c,Country__c,RecordType__c', '', '', '001'); return false">
+                            <img onmouseover="this.className='lookupIconOn';"
+                            alt="Account Name Lookup (New Window)"
+                            onmouseout="this.className='lookupIcon';" class="lookupIcon"
+                            src="/s.gif" /> </a>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock id="pageBlock">
+            <apex:inputCheckbox label="Select All" id="chk" value="{!selected}"
+                onclick="selectAll()" />
+            <apex:outputLabel value="Select All"
+                style="color: black;font-size: .9em;font-weight: bold;" />
+            <apex:pageBlockTable value="{!p.wrappers}" var="w" id="pbTable">
+                <apex:column headerValue="Select">
+                    <apex:inputCheckbox value="{!w.isSelected}"
+                        rendered="{!NOT(w.isMoved)}" />
+                </apex:column>
+                 <apex:column >
+                     <apex:outputLink value="/apex/ServiceContracts360Controller?id={!w.obj['Id']}"
+                        rendered="{!NOT(w.isMoved)}">View 360</apex:outputLink> 
+                    <apex:facet name="header">
+                       <apex:outputLink target="_new" value="/{!w.obj['Id']}"></apex:outputLink>
+                      
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                     <apex:outputLink value="/{!w.obj['Id']}"
+                        rendered="{!NOT(w.isMoved)}">{!w.obj['Name']}</apex:outputLink> 
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Service Contract{!IF(sortExpression=='Name',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                
+                
+                     
+                
+                <apex:column >
+                <apex:outputField value="{!w.obj['Sold_To_Name__c']}"
+                        rendered="{!NOT(w.isMoved)}"/>
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Sold To Name{!IF(sortExpression=='Sold_To_Name__r.Name',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Sold_To_Name__r.Name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['End_User_Name__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="End User Name{!IF(sortExpression=='End_User_Name__r.Name',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="End_User_Name__r.Name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Support_Owner__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Support Owner{!IF(sortExpression=='Support_Owner__r.Name',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Support_Owner__r.Name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['StartDate']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Start Date{!IF(sortExpression=='StartDate',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="StartDate" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['EndDate']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="End Date{!IF(sortExpression=='EndDate',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="EndDate" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <!--                 
+                <apex:column>
+                    <apex:outputField value="{!w.obj['Agreement_Status__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Status{!IF(sortExpression=='Agreement_Status__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Agreement_Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>                
+                -->
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Opp_Status__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Status{!IF(sortExpression=='Opp_Status__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Opp_Status__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>  
+                <apex:column >
+                    <apex:outputField value="{!w.obj['VSOE_Segment__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Genesys Care{!IF(sortExpression=='VSOE_Segment__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="VSOE_Segment__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Maintenance_Amount__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Maintenance Amount{!IF(sortExpression=='Maintenance_Amount__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Maintenance_Amount__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Quote_Name__c']}" rendered="{!NOT(w.isMoved)}"/>
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Previous Quote #{!IF(sortExpression=='Quote_Name__r.Name',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Quote_Name__r.Name" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['PO_Number__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="PO #{!IF(sortExpression=='PO_Number__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="PO_Number__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Billing_Date__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Billing Date{!IF(sortExpression=='Billing_Date__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Billing_Date__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['SG2_Region__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="SG2 Region{!IF(sortExpression=='SG2_Region__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="SG2_Region__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column >
+                    <apex:outputField value="{!w.obj['Big_Six__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Big Six{!IF(sortExpression=='Big_Six__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Big_Six__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+
+                   <apex:column >
+                    <apex:outputField value="{!w.obj['Service_Contract_Type__c']}"
+                        rendered="{!NOT(w.isMoved)}" />
+                    <apex:facet name="header">
+                       <apex:commandLink action="{!findRelatedRecords}" value="Service Contract Type{!IF(sortExpression=='Big_Six__c',IF(sortDirection='ASC','▼','▲'),'')}">
+                         <apex:param value="Service_Contract_Type__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                       </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+
+
+            </apex:pageBlockTable>
+            <apex:panelGrid columns="4">
+                <apex:commandLink action="{!p.first}" immediate="true"
+                    rerender="pageBlock">First</apex:commandlink>
+                    <apex:commandLink action="{!p.previous}"
+                        rendered="{!p.hasPrevious}" immediate="true" rerender="pageBlock">Previous</apex:commandlink>
+                        <apex:commandLink action="{!p.next}" rendered="{!p.hasNext}"
+                            immediate="true" rerender="pageBlock">Next</apex:commandlink>
+                            <apex:commandLink action="{!p.last}" rerender="pageBlock">Last</apex:commandlink>
+            </apex:panelGrid>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!includeOpps}" value="Include" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:pageBlockSection id="included" title="Included" columns="1">
+                <apex:pageBlockTable value="{!selectedWrappers}" var="w"
+                    id="pbTable1">
+                    <apex:column headerValue="Select">
+                        <apex:inputCheckbox value="{!w.isSelected}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <!--<apex:column headerValue="Opportunity">
+                        <apex:outputLink value="/{!w.obj['Order__r']['Opportunity__c']}" rendered="{!w.isMoved}">{!w.obj['Order__r']['Opportunity__r']['Name']}</apex:outputLink>
+                    </apex:column>
+                <!--    <apex:column headerValue="Type">
+                        <apex:outputField value="{!w.obj['Renewal_Opportunity__r']['RecordType']['Name']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column> -->
+                    <!-- 
+                    <apex:column headerValue="Co-Term Opportunity">
+                        <apex:outputField value="{!w.obj['Co_Term_Opportunity__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    -->
+                    <apex:column headerValue="Service Contract">
+                        <apex:outputField value="{!w.obj['Name']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Renewal Opportunity">
+                        <apex:outputField value="{!w.obj['Renewal_Opportunity__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Maintenance Start Date">
+                        <apex:outputField value="{!w.obj['StartDate']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Maintenance End Date">
+                        <apex:outputField value="{!w.obj['EndDate']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Order #">
+                        <apex:outputField value="{!w.obj['Order__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Sold To">
+                        <apex:outputField value="{!w.obj['Sold_To_Name__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="End User">
+                        <apex:outputField value="{!w.obj['End_User_Name__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="Support Owner">
+                        <apex:outputField value="{!w.obj['Support_Owner__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                    <apex:column headerValue="System Integrator">
+                        <apex:outputField value="{!w.obj['System_Integrator__c']}"
+                            rendered="{!w.isMoved}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!submit}" value="CoTerm" />
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:pageBlock id="coTermedScs">
+            <apex:pageBlockSection title="Co Termed Opportunities" columns="1">
+                <apex:pageBlockTable value="{!coTermedScs}" var="w" id="pbTable2">
+                    <apex:column headerValue="Select">
+                        <apex:inputCheckbox value="{!w.isSelected}" disabled="{!(parentOppId == LEFT(w.obj['Renewal_Opportunity__c'],15))}" 
+                                          rendered="{!w.obj['Renewal_Opportunity__c'] != quo.BigMachines__Opportunity__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="Service Contract">
+                        <apex:outputLink value="/{!w.obj ['id']}" >{!w.obj['Name']}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="Renewal Opportunity">
+                        <apex:outputField value="{!w.obj['Renewal_Opportunity__c']}"
+                             />
+                    </apex:column>
+                    <apex:column headerValue="Status">
+                        <apex:outputField value="{!w.obj ['Opp_Status__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="Maintenance Start Date">
+                        <apex:outputField value="{!w.obj ['StartDate']}" />
+                    </apex:column>
+                    <apex:column headerValue="Maintenance End Date">
+                        <apex:outputField value="{!w.obj ['EndDate']}" />
+                    </apex:column>
+                    <apex:column headerValue="Order #">
+                        <apex:outputField value="{!w.obj ['Order__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="Sold To">
+                        <apex:outputField value="{!w.obj['Sold_To_Name__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="End User">
+                        <apex:outputField value="{!w.obj ['End_User_Name__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="Support Owner">
+                        <apex:outputField value="{!w.obj ['Support_Owner__c']}" />
+                    </apex:column>
+                    <apex:column headerValue="System Integrator">
+                        <apex:outputField value="{!w.obj ['System_Integrator__c']}" />
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!removeCoTermedScs}" value="Remove" />
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+                <apex:commandButton action="{!cancel}" value="Done" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+        <apex:actionFunction reRender="pbTable" action="{!selectAll}"
+            name="selectAll" />
+        <apex:actionFunction name="test" id="cancel" rerender="none"/>
+    </apex:form>
+</apex:page>

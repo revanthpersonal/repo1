@@ -1,0 +1,55 @@
+<apex:page standardController="Case_Escalation__c" extensions="CaseEscalationController">
+
+<apex:includeScript value="/support/console/35.0/integration.js"/> 
+<script type="text/JavaScript"> 
+ 
+    var csId;
+    function testCloseTab() {
+            if (sforce.console.isInConsole())  {   
+                sforce.console.getEnclosingTabId(closeSubtab);
+            }
+            else {
+                 window.parent.top.location.href = csId;
+            }
+        }
+     var closeSubtab = function closeSubtab(result) {
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+               
+</script>
+
+<apex:form >
+     <apex:pageMessages />
+     
+     <apex:pageBlock title="New Escalation: Case {!caseNum}">
+         
+         <apex:pageBlockButtons >
+             <apex:commandButton action="{!saveEscl}" value="Save"/>
+             <apex:commandButton value="Cancel" id="Cancel" immediate="true" onclick="csId='/{!caseId}'; testCloseTab(); return false " /> 
+         </apex:pageBlockButtons>
+     
+         <apex:pageBlockSection columns="2">
+           
+            <apex:outputField value="{!escl.Case__c}"/> 
+               <apex:inputField value="{!escl.Status__c}" required="true"/>       
+            <apex:inputField value="{!escl.Level__c}"/>   
+                <apex:inputField value="{!escl.Account_Escalation_Owner__c}" required="true"/> 
+             <apex:inputField value="{!escl.Reason__c}"/>                           
+                 <apex:inputField value="{!escl.Tech_Escalation_Owner__c}" required="true"/>
+             <apex:inputField value="{!escl.PS_Deployment__c}"/>   
+                   <apex:inputField value="{!escl.Escalation_Requester__c}" />                                   
+                                                      
+         </apex:pageBlockSection>
+         
+         <apex:pageBlockSection columns="1">
+              <apex:inputField value="{!escl.Description__c}" required="true"/>
+              <apex:inputField value="{!escl.Escalation_Note__c}" />                                
+        </apex:pageBlockSection>
+                 
+     </apex:pageBlock>
+
+
+</apex:form>
+
+</apex:page>

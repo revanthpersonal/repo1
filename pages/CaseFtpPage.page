@@ -1,0 +1,11 @@
+<apex:page standardController="Case" extensions="CaseOpenFTPExtension" showHeader="true">
+   <apex:form >
+      <apex:commandButton action="{!pageRef}" value="Return To Case"/>
+   </apex:form>  
+    <p> Please note that you should always compress any file before uploading them to Genesys.
+     The typical Genesys log file compresses to roughly 5% to 10% of its original size, so using compression allows you to move them faster,
+     and thus Genesys Support and Engineering will be able to access them more quickly.  Thank you.</p>
+ 
+  <apex:iframe src="{!strUrl}" width="800" height="500" frameborder="true" scrolling="true"/>
+  
+</apex:page>

@@ -1,0 +1,123 @@
+<apex:page sidebar="false" showHeader="true" controller="CasesListViewPortal" >
+
+<apex:variable value="{!IF(BEGINS(recType,'fr'),'Feature Requests','Cases')}" var="cstitle"/>
+<apex:variable value="{!IF(platformFilter='eng','PureEngage Cloud', IF(platformFilter='cnct','PureConnect Cloud','PureCloud') )}" var="pltfrmTitle"/>
+
+   <div class="col-xs-12 margin-top-1r">
+    <h5 class="margin-bottom-2r bold greytext">My Support | {!pltfrmTitle} | <span class="orangetext">{!cstitle}</span></h5>
+   </div>
+    
+   <apex:outputPanel id="casesPanel">
+        <apex:form >
+  
+            <apex:actionFunction rerender="casesPanel" name="lazyLoad"
+                action="{!lazyLoad}" />
+            <apex:actionStatus startText=" Processing "
+                stopText=" Done " id="counterStatus">
+                <apex:facet name="start">Processing...
+                            <img src="/apexpages/devmode/img/saveStatus.gif" />
+                </apex:facet>
+
+                <apex:facet name="stop">
+                    <apex:selectList value="{!selectedStatus}" multiselect="false" size="1">
+                        <apex:actionSupport event="onchange" action="{!changeQuerySelections}"
+                            rerender="mycases" status="counterStatus" oncomplete="" />
+                        <apex:selectOptions value="{!statusOpts}" />
+                    </apex:selectList>
+                </apex:facet>
+            </apex:actionStatus>
+     
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <apex:outputLabel value="Cloud Account/Deployment " >
+                <apex:actionStatus startText=" Processing "
+                    stopText=" Done " id="counterStatus2">
+                    <apex:facet name="start">Processing...
+                            <img src="/apexpages/devmode/img/saveStatus.gif" />
+                    </apex:facet>
+                    <apex:facet name="stop">
+                        <apex:selectList value="{!selectedCldDeplId}" multiselect="false" size="1">
+                            <apex:actionSupport event="onchange" action="{!changeQuerySelections}"
+                                rerender="mycases" status="counterStatus2" oncomplete="" />
+                            <apex:selectOptions value="{!cldDeplOpts}" />
+                        </apex:selectList>
+                    </apex:facet>
+                </apex:actionStatus>
+            </apex:outputLabel>
+   
+            <apex:pageBlock id="mycases">
+                <apex:outputPanel rendered="{!!activated}">
+                    <apex:image value="/img/loading.gif" />
+                    Loading... 
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!activated}">
+                
+            <div class="scroll"><c:DynamicOffsetPaginator pController="{!controller}" panel="casesPanel" id="pginatorComp" />
+  
+            <apex:outputLink title="Export To Excel" value="/customercare/PortalCasesExport?dpl={!selectedCldDeplId}&rectp={!recType}&st={!selectedStatus}&fltr={!platformFilter}" target="_blank" > 
+                <apex:image url="{!$Resource.ExcelIcon}" width="25px" height="22px" style="float: right;"/>    
+            </apex:outputLink>   
+
+ <!--- Support, Service, Incident NON-Closed --->
+           <apex:pageBlockTable value="{!cases}" var="case" rendered="{!AND(recType != 'frcld',isClosed==false)}"> 
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.Portal_Cloud_Fields_View}" var="f">                          
+                            <apex:column style="font-size: .9em;">
+                                <apex:facet name="header">
+                                    <c:SortOffsetHeader sController="{!controller}"                         
+                                       header="{!IF(f.FieldPath=='Date_Modified_Closed__c', 'Date Modified', IF(f.FieldPath=='Cloud_Deployment_Name__c', 'Account/Depl.', f.Label))}"                                                            
+                                       column="{!f.FieldPath}" panel="casesPanel" />                                    
+                                </apex:facet>       
+                                <apex:outputLink value="/customercare/CaseDetailCloudPortal?id={!case.Id}" style="text-decoration:underline;"
+                                    rendered="{!IF(f.FieldPath=='CaseNumber',true,false)}" target="_blank"> {!case[f]}</apex:outputLink>               
+                                <apex:outputField value="{!case[f]}" rendered="{!IF((f.FieldPath=='CaseNumber'),false,true)}" />                  
+                            </apex:column>
+                        </apex:repeat>
+                 </apex:pageBlockTable>
+                 
+     <!--- Support, Service, Incident Closed ---> 
+         <apex:pageBlockTable value="{!cases}" var="case" rendered="{!AND(recType != 'frcld',isClosed==true)}"> 
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.Portal_Cloud_Fields_Closed_Case_View}" var="f">                          
+                            <apex:column style="font-size: .9em;">
+                                <apex:facet name="header">
+                                    <c:SortOffsetHeader sController="{!controller}"                         
+                                       header="{!IF(f.FieldPath=='Cloud_Deployment_Name__c', 'Account/Depl.', f.Label)}"                                                            
+                                       column="{!f.FieldPath}" panel="casesPanel" />                                    
+                                </apex:facet>       
+                                <apex:outputLink value="/customercare/CaseDetailCloudPortal?id={!case.Id}" style="text-decoration:underline;"
+                                    rendered="{!IF(f.FieldPath=='CaseNumber',true,false)}" target="_blank"> {!case[f]}</apex:outputLink>               
+                                <apex:outputField value="{!case[f]}" rendered="{!IF((f.FieldPath=='CaseNumber'),false,true)}" />                  
+                            </apex:column>
+                        </apex:repeat>
+                 </apex:pageBlockTable>   
+                 
+ <!--- END Support, Service, Incident --->
+ 
+  <!--- FR --->
+             <apex:pageBlockTable value="{!cases}" var="case" rendered="{!recType=='frcld'}"> 
+                        <apex:repeat value="{!$ObjectType.Case.FieldSets.Portal_Cloud_FR_Fields_View}" var="f">          
+                            <apex:column style="font-size: .9em;">
+                                <apex:facet name="header">
+                                    <c:SortOffsetHeader sController="{!controller}"
+                                        header="{!IF(AND(f.FieldPath=='Date_Modified_Closed__c', isClosed==false), 'Date Modified', IF(f.FieldPath=='Cloud_Deployment_Name__c', 'Account/Depl.', f.Label))}"                                                              
+                                        column="{!f.FieldPath}" panel="casesPanel" />                      
+                                </apex:facet>
+                                              
+                               <apex:outputLink value="/customercare/CaseFRDetailCloudPortal?id={!case.Id}" style="text-decoration:underline;"
+                                 rendered="{!IF(f.FieldPath=='CaseNumber',true,false)}" target="_blank"> {!case[f]}</apex:outputLink>
+                               <apex:outputField value="{!case[f]}" rendered="{!IF((f.FieldPath=='CaseNumber'),false,true)}" />
+                  
+                            </apex:column>
+                        </apex:repeat>
+                 </apex:pageBlockTable>
+  <!--- END FR --->
+                    </div>
+                </apex:outputPanel>
+            </apex:pageBlock>
+ 
+            <apex:actionFunction name="rldPginator" rerender="pginatorComp" />
+            
+        </apex:form>
+    </apex:outputPanel>
+    <script>
+        setTimeout(lazyLoad, 1000);
+    </script>
+</apex:page>

@@ -1,0 +1,70 @@
+<apex:page standardController="Account" extensions="AccountActiveContractsExtension">
+    <apex:form >
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!contracts}" var="eachRecord">
+            <apex:column >
+                <apex:facet name="header">
+                    Action
+                </apex:facet>
+                <apex:outputLink value="/{!eachRecord.att.id}" target="_blank"> View </apex:outputLink> 
+                &nbsp;
+                |
+                &nbsp;
+                <apex:outputLink value="/servlet/servlet.FileDownload?file={!eachRecord.att.id}" target="_blank"> Download </apex:outputLink>               
+                &nbsp;
+                |
+                &nbsp;
+                <apex:commandLink action="{!createContent}" value="Generate URL" rendered="{!eachRecord.att.id!=null && eachRecord.contract.Public_URL__c==''}" immediate="true">
+                    <apex:param name="attachmentId" value="{!eachRecord.att.id}" assignTo="{!strAttachmentId}"/>
+                    <apex:param name="contractId" value="{!eachRecord.contract.id}" assignTo="{!strContractId}"/>
+                </apex:commandLink>
+            </apex:column>
+            
+            <apex:column >
+                <apex:facet name="header">
+                    Title
+                </apex:facet>
+                <apex:outputLink value="/{!eachRecord.att.id}" target="_blank"> {!eachRecord.strDocumentName} </apex:outputLink>               
+            </apex:column>
+            
+            
+            <apex:column >
+                <apex:facet name="header">
+                    Contract
+                </apex:facet>
+                <apex:outputLink value="/{!eachRecord.contract.id}" target="_blank"> {!eachRecord.contract.Name} </apex:outputLink>             
+            </apex:column>  
+            
+            <apex:column >
+                <apex:facet name="header">
+                    Public URL
+                </apex:facet>
+                <apex:outputLink value="{!eachRecord.contract.Public_URL__c}" target="_blank" rendered="{!eachRecord.contract.Public_URL__c!=''}"> Contract Document Link</apex:outputLink>             
+            </apex:column>
+            
+            <apex:column >
+                <apex:facet name="header">
+                    Effective Date
+                </apex:facet>
+                <apex:outputText value="{0,date,MM/dd/yyyy}">
+                    <apex:param value="{!eachRecord.dtEffectiveDate}" />
+                </apex:outputText>              
+            </apex:column>          
+            <apex:column >
+                <apex:facet name="header">
+                    Expiration Date
+                </apex:facet>
+                <apex:outputText value="{0,date,MM/dd/yyyy}">
+                    <apex:param value="{!eachRecord.dtExpiryDate}" />
+                </apex:outputText>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">
+                    Created By
+                </apex:facet>
+                <apex:outputLink value="/{!eachRecord.strCreatedBy}" target="_blank"> {!eachRecord.strCreatedBy} </apex:outputLink>             
+            </apex:column>      
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </apex:form>
+</apex:page>

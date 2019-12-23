@@ -1,0 +1,81 @@
+<apex:page standardController="Case" extensions="CaseSaveController" >
+    
+    <style>
+      table { border-spacing: 5px 5px; } 
+    </style>
+ 
+     <apex:form id="caseForm" >
+        <apex:pageBlock id="pgBlk">
+                
+            <apex:pageBlockButtons location="bottom">  
+                <apex:commandButton value="Save" id="Save" action="{!saveCase}" />
+               <apex:commandButton value="Cancel" id="Cancel" immediate="true" onclick="testCloseTab(); return false " />              
+            </apex:pageBlockButtons>
+  
+            <apex:pageBlockSection title="{!pageTitle}" columns="1" id="pgblk1" collapsible="false">
+          <!--
+             <apex:pageBlockSectionItem > 
+                    <apex:outputLabel value="Case Sub Type" /> 
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                       <apex:outputPanel layout="block" styleClass="requiredBlock" /> 
+                            <apex:selectList label="Case Sub Type" value="{!cs.Problem_Sub_Type__c}" style="width:200px" size="1" required="true" >
+                                <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                <apex:selectOption itemValue="Question" itemLabel="Question"/>
+                                <apex:selectOption itemValue="Problem" itemLabel="Problem"/>
+                                <apex:selectOption itemValue="Data Privacy" itemLabel="Data Privacy"/>
+                            </apex:selectList>                                                                                                                             
+                    </apex:outputPanel> 
+               </apex:pageBlockSectionItem>        
+          -->    
+                     <apex:inputField value="{!cs.Problem_Sub_Type__c}" required="true" style="width: 240px;"/> 
+                    <apex:inputField value="{!cs.MAC_Type_PureCnct__c}" required="true" style="width: 240px;"/> 
+                                                              
+                    <apex:inputField value="{!cs.Subject}" required="true" style="width: 90%;" />
+                    <apex:inputField value="{!cs.Description}" required="true" style="width: 90%; height: 200px;" />
+                    <apex:inputField value="{!cs.Security_Threat__c}" />
+                    <apex:inputField value="{!cs.Business_Impact_Product__c}" required="true" style="width: 90%; height: 200px;" />                              
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" >             
+                    <apex:inputfield required="true" value="{!cs.Priority}"  style="width:70%;" />
+                    <apex:inputfield required="true" value="{!cs.Environment_Type__c}"  style="width:70%;"/>
+                    <apex:inputfield required="true" value="{!cs.OS__c}"  style="width:70%;"/>
+                    <apex:inputfield value="{!cs.Database__c}"  style="width:70%;"/>
+                    <apex:inputfield required="true" value="{!cs.Status}"  style="width:70%;"/>
+                    <apex:inputfield required="true" value="{!cs.Sub_Status__c}"  style="width:70%"/>
+                    <apex:inputfield value="{!cs.Date_Needed__c}"  style="width:70%;"/>
+                    <apex:inputfield value="{!cs.Date_Justification__c}"  style="width:70%;"/>                                                     
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" >   
+                <apex:inputField value="{!cs.Troubleshooting_Actions__c}" style="width: 90%;" />
+                <apex:inputField value="{!cs.Recent_Changes__c}" style="width: 90%;" />
+                <apex:inputField value="{!cs.of_Agents_Ports_Affected__c}" style="width: 90%;" />                
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" >
+                 <apex:inputField value="{!cs.X3rd_Party_Products__c}" style="width: 75%;" />
+                <apex:inputField value="{!cs.External_Ref__c}" style="width: 75%;" />
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>           
+    </apex:form> 
+ 
+ <apex:includeScript value="/support/console/35.0/integration.js"/> 
+<script type="text/JavaScript"> 
+     
+        function testCloseTab() {
+            if (sforce.console.isInConsole())  {   
+                sforce.console.getEnclosingTabId(closeSubtab);
+            }
+            else {
+                 window.parent.top.location.href = '/500';
+            }
+        }
+              
+        var closeSubtab = function closeSubtab(result) {
+            var tabId = result.id;
+            sforce.console.closeTab(tabId);
+        };
+ </script>          
+</apex:page>

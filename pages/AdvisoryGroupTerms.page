@@ -1,0 +1,64 @@
+<apex:page sidebar="false" showHeader="true" standardStylesheets="false">
+<apex:variable var="isCommunity" value="{!$Site.CurrentSiteUrl != null}" />
+  
+ 
+  
+ <div class="threecolumn" >  
+  
+  <div id="sidebar_left" class="leftContent"> <!-- left sidebar start -->  
+  
+  
+ </div> <!-- left sidebar End -->
+ 
+ 
+   <div id="centerContent" class="centerContent" style="position: relative;border-left: 1px solid #e9eaea;"> <!-- main content start -->
+ 
+
+
+  
+  
+  <table>
+  <tr>
+  <td>
+  
+  </td>
+  <td></td>
+  <td>
+  <div style="color:#015BA7;font-weight:bold;font-size:16px;">Genesys Care Advisory Group </div>
+  <div style="color:#015BA7;font-weight:bold;font-size:16px;">Terms of Participation </div>
+  </td>
+  </tr>
+  </table>
+  <br/>
+  <br/>
+  <div style="font-weight:bold;font-size:12px;">
+  These are the terms you accepted during the introduction survey to join this group:
+  </div>
+    <br/>
+  <br/>
+  <div style="font-size:12px;">
+  Genesys would like to share with you confidential information about new and existing software and services, and may give you opportunities to participate in the design and early evaluation of Genesys software and services.  
+    <br/>
+  <br/>
+  By joining this group, you agree to the following:
+ <br/>
+ <ol>
+<li>All information that Genesys shares with you is Confidential and Proprietary to Genesys, even if it’s not described or labeled as such. This includes all information about Genesys products, services, and plans that is not publicly available when it is shared with you, regardless of the way it is shared (such as verbally, in a screen-sharing session, or by email).</li>
+<li>All ideas and inventions shared by you and other members within the Genesys Care Advisory Group are the property of Genesys, and you give Genesys all rights, title and interest in them. </li> 
+<li>If you want to share an idea or invention that belongs to your Company and which you would like to exclude from Genesys ownership rights in this agreement, you must explicitly state this in writing before disclosing the idea or invention to Genesys. </li> 
+<li>If you do share information that is Confidential and Proprietary to your own Company, Genesys will treat it with the same care as we treat our own Confidential and Proprietary information.</li>
+<li>You will not use Genesys prototypes, software, or other forms of Genesys Confidential and Proprietary information for any purpose other than to provide feedback to Genesys.</li>
+<li>You will abide by all of the Genesys Care Tools Terms and Conditions as well as your Genesys Master Software License and Services Agreement. </li>
+<li>You or Genesys may end this agreement in writing at any time.</li>
+</ol>
+  </div>
+  </div>  <!-- main content End -->
+  
+  
+  <div id="rightContent" class="rightContent" style="position: relative;float: right;width: 230px;"> <!-- right sidebar start -->
+  <br/> <br/>
+  </div><!-- right sidebar End -->
+ 
+
+ </div>
+</apex:page>

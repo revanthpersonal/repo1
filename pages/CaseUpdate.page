@@ -1,0 +1,85 @@
+<apex:page standardController="Case" showHeader="false" extensions="CaseUpdateFeed">
+     <apex:form >
+ 
+     <apex:pageMessages />
+     <apex:outputPanel style="height:10px;">
+        &nbsp;
+        <apex:actionstatus id="status">
+            <apex:facet name="start">
+                <apex:outputLabel value="Working, Please wait."/>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputPanel> 
+    <apex:pageBlock >
+        <apex:pageBlockSection columns="1" id="genCaUp">
+        
+            <apex:inputField value="{!genCaseUp.Type__c}" required="true" />
+            <apex:inputField value="{!genCaseUp.Name}" required="true" ></apex:inputField>
+            <apex:inputField id="desc" value="{!genCaseUp.Description__c}" />
+            <apex:inputField value="{!genCaseUp.Make_Public__c}"></apex:inputField>
+           <apex:commandButton value="Save" action="{!saveCaseUpdate}" oncomplete="rffocuedTab({!insFailed});" rerender="inpFl,pnlJS" status="status" />
+ 
+        </apex:pageBlockSection>
+        <!-- <apex:inputText id="inpFl" value="{!insFailed}"/> -->
+        <apex:outputPanel layout="block" style="overflow:auto;width:519px;height:500px" >                     
+             <c:Case_Update_Coveo caseUpdateId="{!Case.Id}"/> 
+             <c:Case_Update caseUpdateId="{!Case.Id}"/> 
+        </apex:outputPanel>
+        
+    </apex:pageBlock>
+    <apex:actionFunction name="saveCaseUpdate" action="{!saveCaseUpdate}"/>
+    <apex:outputPanel id="pnlJS">
+        <apex:outputPanel rendered="{!doRender}">
+        <script>
+            if('{!caseId}' != '') {              
+              
+              if ( '{!$Site.Prefix}' != '' )
+                  window.parent.top.location.href = '{!$Site.Prefix}/{!caseId}';
+              else  
+                 window.parent.top.location.href = '/{!caseId}';                                
+            }
+        </script>
+        </apex:outputPanel>
+    </apex:outputPanel>    
+    
+    <apex:includeScript value="/support/console/25.0/integration.js"/>
+    
+    <script type="text/javascript">
+        /*window.onload = function() {
+            resetLinkPostTarget();
+        };
+        
+        function resetLinkPostTarget(){
+            var lnkPost = document.getElementsByClassName('linkPostLink');
+            for(i = 0; i<lnkPost.length;i++){
+                alert(lnkPost[i].target);
+                lnkPost[i].target = '_self';
+            }
+        }*/
+        function testEvnt(){
+            sforce.console.fireEvent('CaseUpdate.RefreshFeedEvent', null, null);
+        }
+        function rffocuedTab(insFailed) {
+            //alert({!insFailed});
+            sforce.console.getFocusedSubtabId(showTabId);
+        }
+        var showTabId = function showTabId(result) {
+                // Display the tab ID
+            sforce.console.refreshSubtabById(result.id, true, refreshSuccess);
+            //alert ('Tab ID: ' + result.id);
+        };
+    
+           
+            var refreshSuccess = function refreshSuccess(result) {
+            //Report whether refreshing the subtab was successful
+            if (result.success == true) {
+                //alert('Subtab refreshed successfully');
+            } else {
+                //alert('Subtab did not refresh');
+            }
+        };
+       
+  </script >
+    
+</apex:form>
+</apex:page>

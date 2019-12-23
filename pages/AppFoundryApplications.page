@@ -1,0 +1,50 @@
+<apex:page controller="AppFoundryApplicationsController" tabStyle="Technology_Market_place_Application__c" id="thempa" action="{!displayDecision}" showheader="false" sidebar="false">
+
+    <apex:composition template="{!$Site.Template}">
+        <apex:define name="header">
+            <c:PartnerPortalHeader currPageName="nothomepage"/>
+        </apex:define>
+        <apex:define name="tabs">
+            <c:PartnerPortalTabs tabname="appFoundryApp"/>
+        </apex:define>
+        <apex:define name="sidebar">
+            <c:PartnerQuickLinks />
+        </apex:define>
+        <apex:define name="body">
+
+            <apex:sectionHeader title="{!currentUser.Contact.Account.Name}" subtitle="AppFoundry Applications"/>
+            <apex:form >
+            <apex:pageBlock >
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="New AppFoundry Application" action="{!newApplication}" />
+                </apex:pageBlockButtons>
+                <apex:pageBlockTable value="{!afApplications}" var="afApp">
+                    <apex:column headerValue="Actions" width="50px">
+                        <apex:commandLink value="View" action="{!viewApplication}" rendered="{!IF(afApp.Status__c != 'In Progress', true, false)}">
+                            <apex:param assignTo="{!selectedApplicationId}" value="{!afApp.Id}" name="selectedApplicationId"/>
+                        </apex:commandLink>
+                        <apex:commandLink value="Edit" action="{!editApplication}" rendered="{!IF(afApp.Status__c == 'In Progress', true, false)}">
+                            <apex:param assignTo="{!selectedApplicationId}" value="{!afApp.Id}" name="selectedApplicationId"/>
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Name">
+                            {!afApp.Name}
+                    </apex:column>
+                    <apex:column headervalue="Partner Account">
+                        <apex:outputLink target="_parent" value="/partner/PartnerPortalAcctDetail?Id={!afApp.Partner_Account__c}">
+                            {!afApp.Partner_Account__r.Name}
+                        </apex:outputLink>
+                    </apex:column>
+                    <apex:column value="{!afApp.Company_Name__c}"/>
+                    <apex:column value="{!afApp.Solution_Name__c}"/>
+                    <apex:column value="{!afApp.Status__c}"/>
+                    <apex:column value="{!afApp.CreatedDate}"/>
+                    <apex:column value="{!afApp.Date_Completed__c}"/>
+                    <apex:column value="{!afApp.Date_Completed__c}"/>
+                    <apex:column value="{!afApp.CreatedBy.Name}" headerValue="Created By"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            </apex:form>
+        </apex:define>
+    </apex:composition>
+</apex:page>

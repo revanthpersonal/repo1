@@ -1,0 +1,37 @@
+<apex:page standardController="Business_Segment__c" extensions="ManageLegalEntitiesController" lightningStylesheets="true">
+    <apex:form id="frm">
+        <apex:pageBlock id="pgblk">
+            <apex:pageMessage summary="You cannot remove existing legal entities. you can only add new legal entities." severity="warning" strength="3" rendered="{!objBS.Approval_Status__c != 'New'}"/>            
+            <apex:pageMessages />
+            <apex:outputLabel value="No legal entity found" rendered="{!listOfLegalEntitiesWrapper.size == 0 && objBS.Approval_Status__c != 'New'}" />
+            <apex:outputText rendered="{!listOfLegalEntitiesWrapper.size == 0 && objBS.Approval_Status__c == 'New'}">
+                <span style="color:red;font-weight:bold;">
+                    Please add at least one Legal Entity.  The Business Segment record cannot be submitted for approval without a Legal Entity.    
+                </span>
+            </apex:outputText>
+            <apex:pageBlockButtons location="top" >
+                <apex:commandButton value="Manage Legal Entities" onclick="window.parent.location='/apex/ManageLegalEntities?id={!objBS.id}';return false;"/>                
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!listOfBSLegalEntitiesWrapper}" var="eachLE" id="pgblk" rendered="{!listOfBSLegalEntitiesWrapper.size > 0}">
+                <apex:column headerValue="Legal Entity Name">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.Legal_Entity_Name__c}"/>                
+                </apex:column>
+                <apex:column headerValue="Date">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.LastModifiedDate}"/>                
+                </apex:column>
+                <apex:column headerValue="Legal Entity ID">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.Legal_Entity_ID__c}"/>                
+                </apex:column>
+                <apex:column headerValue="Status">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.Status__c}"/>                
+                </apex:column>
+                <apex:column headerValue="Country">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.Legal_Entity__r.Country__c}"/>                
+                </apex:column>
+                <apex:column headerValue="Region">                
+                    <apex:outputField value="{!eachLE.objLegalEntity.Region__c}"/>                
+                </apex:column>            
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

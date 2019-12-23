@@ -1,0 +1,516 @@
+<apex:page controller="ca2cq_setupCtr" standardStylesheets="false" sidebar="false">
+    <head>
+
+        <link href="{!URLFOR($Resource.ca2cq_resources, '/css/bootstrap.min.css')}" rel="stylesheet" media="screen"/>
+        <apex:includeScript value="{!URLFOR($Resource.ca2cq_resources, '/js/jquery.min.js')}"/>
+
+        <style type="text/css">
+            body {
+                font-size: 12px !important;
+            }
+            .form-horizontal .form-group {
+                margin-right: 0px !important;
+                margin-left: 0px !important;
+            }
+            .form-control {
+                height: 32px !important;
+                font-size: 12px !important;
+            }
+            .text-area{
+                height: auto !important;
+            }
+			div.debug_logs{
+				display: none !important;
+			}
+        </style>
+        <script type="text/javascript">
+		var questionIdPrefix = "{!JSINHTMLENCODE(questionIDPrefix)}";
+        function processSave(){
+            var pairs = new Array();
+
+            $('.cMap').each(function(){
+                var selObj = $(this).find('select');
+                var isCHECK = $(this).find('input[type="checkbox"]:checked').size();
+                pairs.push($(selObj).attr('id')+':'+$(selObj).val()+':'+isCHECK) ;
+            })
+
+            var topicsPair = new Array();
+            $('.topicMap').each(function(){
+                var category = $(this).find('.dataCategoryName').text().trim();
+                var topicName = $(this).find('.topicName').val().trim();
+                topicsPair.push(category+':'+topicName) ;
+            })
+
+            var whichQuestions = $('input[type="radio"]:checked').val();
+            var questionIdList = $('#questionIds').val();
+            var email = $('.input-email').val();
+            var pass = true;
+
+            if(whichQuestions != 'includeAll'){
+
+				if ( questionIdList == ''){
+	                alert('Please provide question Ids');
+	                pass = false;
+	            }else{
+					//questionIDPrefix
+					var idListRegEx = new RegExp("^(("+questionIdPrefix+")[0-9a-zA-Z]{15})(,("+questionIdPrefix+")[0-9a-zA-Z]{15})*$");
+					var validL = idListRegEx.test(questionIdList);
+					if( !validL ){
+		                alert('Please provide valid question Ids');
+		                pass = false;
+					}
+				}
+			}
+            if(email == ''){
+                alert('Please provide an email address');
+                pass = false;
+            }
+            console.log('validation pass : '+pass);
+
+            if(pass){
+                saveJS(pairs.toString(),topicsPair.toString(), whichQuestions,questionIdList);
+            }
+        }
+
+        function cancelSave(){
+            window.location.reload();
+        }
+
+        var IsProcessRunningJS ="{!IsProcessRunning}"!="false";
+
+        function checkBatch(){
+
+            console.log('checkBatch - '+IsProcessRunningJS);
+            if (IsProcessRunningJS){
+                console.log('IsProcessRunningJS : '+IsProcessRunningJS+' checkBatch -   call   more ');
+                refreshJS();
+            }else{
+                console.log('IsProcessRunningJS : '+IsProcessRunningJS);
+            }
+
+        }
+
+
+        </script>
+    </head>
+
+    <apex:form styleClass="form-horizontal" html-role="form">
+
+
+    <apex:outputPanel id="all" layout="block" styleClass="panel panel-default">
+
+        <div class="panel-body">
+            <apex:pageMessages />
+            <div class="row">
+            <!-- COL for settings -->
+                <div class="col-sm-6">
+
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Settings</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            <label for="Notification_email" class="control-label">{!$ObjectType.ca2cq_config__c.fields.Notification_email__c.label}</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <apex:inputField value="{!setupObj.Notification_email__c}" id="Notification_email" styleClass="form-control input-email" />
+                        </div>
+                        <div class="col-sm-2">&nbsp;</div>
+                    </div>
+                    <hr/>
+
+                    <label  class="control-label ">Which questions do you want to migrate?</label>
+                    <br/><br/>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <div class="radio">
+                        <label>
+                            <apex:outputPanel rendered="{!setupObj.Migrate_all_Questions__c}">
+                                <input type="radio" name="optionsRadios" id="Migrate_all_Questions__c" value="includeAll"
+                                    checked='checked'   />
+                            </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!setupObj.Migrate_all_Questions__c}">
+                          <input type="radio" name="optionsRadios" id="Migrate_all_Questions__c" value="includeAll"
+                             />
+                        </apex:outputPanel>
+                         All questions
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-5">
+                      <div class="radio">
+                      <label>
+                       <apex:outputPanel rendered="{!setupObj.Include_this_Ids__c}">
+                        <input  type="radio" name="optionsRadios" id="Include_this_Ids__c" value="includeThis"
+                                checked='checked'    />
+                       </apex:outputPanel>
+                       <apex:outputPanel rendered="{!!setupObj.Include_this_Ids__c}">
+                        <input type="radio" name="optionsRadios" id="Include_this_Ids__c" value="includeThis"
+                       />
+                       </apex:outputPanel>
+                         Only these questions (list IDs)
+                      </label>
+                    </div>
+                  </div>
+
+
+                  <div class="col-sm-5">
+                      <div class="radio">
+                      <label>
+                        <apex:outputPanel rendered="{!setupObj.Exclude_this_Ids__c}">
+                          <input type="radio" name="optionsRadios" id="Exclude_this_Ids__c" value="excludeThis"
+                            checked='checked'  />
+                        </apex:outputPanel>
+                        <apex:outputPanel rendered="{!!setupObj.Exclude_this_Ids__c}">
+                          <input type="radio" name="optionsRadios" id="Exclude_this_Ids__c" value="excludeThis"
+                          />
+                        </apex:outputPanel>
+                          All except these questions (list IDs)
+                      </label>
+                    </div>
+                  </div>
+
+              </div>
+
+
+              <div class="form-group">
+                  <div class="col-sm-12">
+                   <textarea  id="questionIds" cols="120" rows="4" class="form-control text-area">{!setupObj.Question_Ids__c}</textarea>
+
+                  </div>
+              </div>
+
+
+
+
+                <hr/>
+                <h5  class="control-label ">Map Zones to Communities</h5>
+                <br/><br/>
+
+                <apex:repeat value="{!zonesMap}" var="key">
+
+                    <apex:outputPanel styleClass="form-group cMap" layout="block">
+                        <div class="col-sm-1">
+                                <apex:inputField value="{!key.Active_for_Migration__c}" id="active" />
+                        </div>
+
+                        <div class="col-sm-4">
+                            {!allCommunities[key.zoneId__c].Name}
+                        </div>
+
+
+                        <div class="col-sm-7">
+
+                            <select class="form-control" id="{!key.zoneId__c}">
+                                <option value="null">Internal</option>
+                                <apex:repeat value="{!allNetworkList}" var="c">
+                                    <option value="{!c.Id}">{!c.Name}
+									</option>
+                                </apex:repeat>
+                            </select>
+
+                            <script type="text/javascript">
+                                var selOption = "{!JSENCODE(key.Community_Id__c)}";
+                                $('#' + '{!JSENCODE(key.zoneId__c)}').val(selOption);
+                            </script>
+
+                        </div>
+
+
+                    </apex:outputPanel>
+
+
+                </apex:repeat>
+                <hr/>
+                <h5  class="control-label "> Map Data Categories to Topics</h5>
+                <br/><br/>
+                <apex:repeat value="{!topicsMaps}" var="key">
+                  <div class="form-group topicMap">
+                    <div class="col-sm-4">
+                        <label  class="control-label dataCategoryName">{!key} </label>
+                    </div>
+                    <apex:repeat value="{!topicsMaps[key]}" var="val">
+
+                      <div class="col-sm-6">
+                        <input class="form-control topicName" value ="{!val} " />
+                      </div>
+
+                    </apex:repeat>
+
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                  </div>
+                </apex:repeat>
+
+
+              </div>
+
+              <div class="panel-footer">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <input type="button" class="btn pull-right" onclick="processSave()" value="Save" />
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="button" class="btn" onclick="cancelSave()" value="Cancel" />
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+
+          <!-- COL for batch -->
+          <div class="col-sm-6">
+            <div class="panel panel-default">
+            <div class="panel-heading"> <h3 class="panel-title">Migration Process</h3></div>
+            <apex:outputPanel layout="block" id="batchStatus"  styleClass="panel-body">
+
+
+              <script type="text/javascript">
+              IsProcessRunningJS ="{!IsProcessRunning}"!="false";
+              if (IsProcessRunningJS){
+				console.log('reload IsProcessRunningJS '+IsProcessRunningJS +'["{!IsProcessRunning}"] date : {!setupObj.Last_processed_date__c}');
+				checkBatch();
+
+			  }
+             </script>
+
+
+            <div class="form-group">
+            <div class="col-sm-10">
+
+				<input type="button" class="btn" onclick="refreshJS()"  value="reload" />
+
+				<apex:outputPanel rendered="{!canStartProcess}">
+                <input type="button" class="btn" onclick="launchBatchJS()" value="Start Migration" />
+                    </apex:outputPanel>
+                <apex:outputPanel rendered="{!isProcessRunning}">
+                    <input type="button" class="btn"  disabled="disabled" value="Start" />
+                </apex:outputPanel>
+
+            </div>
+            <div class="col-sm-2">
+            &nbsp;
+            </div>
+            </div>
+			<div class="debug_logs">
+            <hr/>
+            <br/>
+           [level:{!setupObj.Current_Executing_Level__c}][can start :{!canStartProcess}][IsProcessRunning: {!isProcessRunning}]
+
+            <hr/>
+			</div>
+                <div class="form-group">
+                    <!-- running status for questions batch  -->
+                    <div class="col-sm-4">
+                        <label for="Execution" class="control-label">Questions and replies : </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5>
+                            <apex:outputPanel styleClass="label label-default" rendered="{!setupObj.Current_Executing_Level__c<1}">
+                                Not Started
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-warning" rendered="{!setupObj.Current_Executing_Level__c==1}">
+                                In progress
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-success" rendered="{!IF(setupObj.Current_Executing_Level__c>1 && setupObj.Current_Executing_Level__c<6, true, false)}">
+                                Completed
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-danger" rendered="{!setupObj.Current_Executing_Level__c==6}">
+                                Error
+                            </apex:outputPanel>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- running status for BestAnswers batch  -->
+                    <div class="col-sm-4">
+                        <label for="Execution" class="control-label">BestAnswers selection : </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5>
+                            <apex:outputPanel styleClass="label label-default" rendered="{!setupObj.Current_Executing_Level__c<2}">
+                                Not Started
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-warning" rendered="{!setupObj.Current_Executing_Level__c==2}">
+                                In progress
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-success" rendered="{!IF(setupObj.Current_Executing_Level__c>2 && setupObj.Current_Executing_Level__c<6, true, false)}">
+                                Completed
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-danger" rendered="{!setupObj.Current_Executing_Level__c==6}">
+                                Error
+                            </apex:outputPanel>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <!-- running status for UserReputation batch  -->
+                    <div class="col-sm-4">
+                        <label for="Execution" class="control-label">UserReputation update : </label>
+                    </div>
+                        <div class="col-sm-6">
+                            <h5>
+                                <apex:outputPanel styleClass="label label-default" rendered="{!setupObj.Current_Executing_Level__c<3}">
+                                    Not Started
+                                </apex:outputPanel>
+                                <apex:outputPanel styleClass="label label-warning" rendered="{!setupObj.Current_Executing_Level__c==3}">
+                                    In progress
+                                </apex:outputPanel>
+                                <apex:outputPanel styleClass="label label-success" rendered="{!IF(setupObj.Current_Executing_Level__c>3 && setupObj.Current_Executing_Level__c<6, true, false)}">
+                                    Completed
+                                </apex:outputPanel>
+                                <apex:outputPanel styleClass="label label-danger" rendered="{!setupObj.Current_Executing_Level__c==6}">
+                                    Error
+                                </apex:outputPanel>
+                            </h5>
+                        </div>
+                    </div>
+
+                <div class="form-group">
+                    <!-- running status for Content batch  -->
+                    <div class="col-sm-4">
+                        <label for="Execution" class="control-label">Images migration : </label>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5>
+                            <apex:outputPanel styleClass="label label-default" rendered="{!setupObj.Current_Executing_Level__c<4}">
+                                Not Started
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-warning" rendered="{!setupObj.Current_Executing_Level__c==4}">
+                                In progress
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-success" rendered="{!IF(setupObj.Current_Executing_Level__c>4 && setupObj.Current_Executing_Level__c<6, true, false)}">
+                                Completed
+                            </apex:outputPanel>
+                            <apex:outputPanel styleClass="label label-danger" rendered="{!setupObj.Current_Executing_Level__c==6}">
+                                Error
+                            </apex:outputPanel>
+                        </h5>
+                    </div>
+              </div>
+
+
+              <hr/>
+                <h5  class="control-label "> Last Migration</h5>
+                <br/><br/>
+
+              <div class="form-group">
+                  <div class="col-sm-4">
+                      <label class="control-label">{!$ObjectType.ca2cq_log__c.fields.Start_Date__c.label}</label>
+                  </div>
+                  <div class="col-sm-6">
+                      <label class="control-label">
+
+                      <apex:outputText value=" {!lastLog.Start_Date__c}" />
+                      </label>
+                  </div>
+                  <div class="col-sm-2">
+                      &nbsp;
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-sm-4">
+                      <label class="control-label">{!$ObjectType.ca2cq_log__c.fields.End_Date__c.label}</label>
+                  </div>
+                  <div class="col-sm-6">
+                      <label class="control-label">
+                        <apex:outputText value=" {!lastLog.End_Date__c}" />
+                      </label>
+                  </div>
+                  <div class="col-sm-2">
+                      &nbsp;
+                  </div>
+              </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4">
+                      <label class="control-label">Migration Log</label>
+                  </div>
+                  <div class="col-sm-6">
+                      <label class="control-label">
+                          <a href="/{!lastLog.Id}" target="_blank"> {!lastLog.Id}</a>
+                      </label>
+                  </div>
+                  <div class="col-sm-2">
+                      &nbsp;
+                  </div>
+              </div>
+
+
+             <table class="table">
+              <thead>
+                <tr>
+                  <th>Content Type</th>
+                  <th>Selected</th>
+                  <th>Migrated</th>
+                  <th>Failed to migrate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Questions</td>
+                  <td>{!lastLog.Questions_Selected__c}</td>
+                  <td>{!lastLog.Questions_Migrated__c}</td>
+                  <td>{!lastLog.Errors_on_Questions__c}</td>
+                </tr>
+                <tr>
+                  <td>Answers</td>
+                  <td>{!lastLog.Answers_Selected__c}</td>
+                  <td>{!lastLog.Answers_Migrated__c}</td>
+                  <td>{!lastLog.Errors_on_Answers__c}</td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            </apex:outputPanel>
+          </div>
+          </div>
+
+        </div>
+
+        </div>
+        <apex:actionstatus id="whileLoading">
+            <apex:facet name="start">
+            <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                 height: 100%;opacity:0.65;width:100%;">
+                <div class="waitingHolder" style="top: 74.2px; width: 91px;">
+                <img class="waitingImage" src="/img/loading.gif" title="Working..." />
+                <span class="waitingDescription">Working...</span>
+                </div>
+            </div>
+            </apex:facet>
+        </apex:actionstatus>
+
+
+
+    </apex:outputPanel>
+
+
+
+    <apex:actionFunction name="saveJS" action="{!save}" status="whileLoading"  reRender="all" >
+    <apex:param name="zonesMap" value="" />
+    <apex:param name="topicsMaps" value="" />
+    <apex:param name="whichQuestions" value="" />
+    <apex:param name="questionIdList" value="" />
+    </apex:actionFunction>
+    <apex:actionFunction name="launchBatchJS" action="{!launchBatch}" reRender="all" status="whileLoading" oncomplete="checkBatch();">
+    </apex:actionFunction>
+
+
+    <apex:actionFunction name="refreshJS" action="{!refresh}"  reRender="batchStatus" oncomplete="checkBatch();">
+    </apex:actionFunction>
+
+
+</apex:form>
+</apex:page>

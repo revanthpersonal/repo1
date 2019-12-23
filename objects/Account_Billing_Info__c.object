@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <formFactor>Large</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <formFactor>Small</formFactor>
+        <type>Default</type>
+    </actionOverrides>
+    <allowInChatterGroups>false</allowInChatterGroups>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <externalSharingModel>ReadWrite</externalSharingModel>
+    <fields>
+        <fullName>Account_Billing_Info_Line_Total__c</fullName>
+        <description>Sum of Totals of Child Account Billing Info Line Total records</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Sum of Totals of Child Account Billing Info Line Total records</inlineHelpText>
+        <label>Document Total</label>
+        <summarizedField>Account_Billing_Info_Line__c.Amount__c</summarizedField>
+        <summaryForeignKey>Account_Billing_Info_Line__c.Account_Billing_Info__c</summaryForeignKey>
+        <summaryOperation>sum</summaryOperation>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Attachment_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>SUBSTITUTE( TEXT(Document_Type__c), &apos; &apos;, &apos;&apos;)   + &apos;-&apos; +  IF(Sold_To_NS_Bill_To__c != End_User__c, Sold_To_NS_Bill_To__r.Name + &apos;-&apos; + End_User__r.Name, Sold_To_NS_Bill_To__r.Name) + &apos;-&apos; + Order__r.Month__c + &apos;-&apos; + Order__r.Year__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Attachment Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Custom_Form__c</fullName>
+        <externalId>false</externalId>
+        <label>Custom Form</label>
+        <length>128</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Date__c</fullName>
+        <externalId>false</externalId>
+        <label>Date</label>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>De_Book_Order__c</fullName>
+        <externalId>false</externalId>
+        <label>De-Book Order #</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>De_Book_Order_flag__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>De-Book Order flag</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Document_Type__c</fullName>
+        <externalId>false</externalId>
+        <label>Document Type</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Credit Memo</fullName>
+                    <default>false</default>
+                    <label>Credit Memo</label>
+                </value>
+                <value>
+                    <fullName>Debit Memo</fullName>
+                    <default>false</default>
+                    <label>Debit Memo</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Email10__c</fullName>
+        <externalId>false</externalId>
+        <label>Email10</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email1__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Primary email. Should always be populated before any other email fields.</inlineHelpText>
+        <label>Email1</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email2__c</fullName>
+        <externalId>false</externalId>
+        <label>Email2</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email3__c</fullName>
+        <externalId>false</externalId>
+        <label>Email3</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email4__c</fullName>
+        <externalId>false</externalId>
+        <label>Email4</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email5__c</fullName>
+        <externalId>false</externalId>
+        <label>Email5</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email6__c</fullName>
+        <externalId>false</externalId>
+        <label>Email6</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email7__c</fullName>
+        <externalId>false</externalId>
+        <label>Email7</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email8__c</fullName>
+        <externalId>false</externalId>
+        <label>Email8</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email9__c</fullName>
+        <externalId>false</externalId>
+        <label>Email9</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Email_Subject_Company_Name__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(Sold_To_NS_Bill_To__c != End_User__c, Sold_To_NS_Bill_To__r.Name + &apos;/&apos; + End_User__r.Name, Sold_To_NS_Bill_To__r.Name)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Email Subject Company Name</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>End_User__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>End User</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Account_Billing_Info2</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Exchange_Rate__c</fullName>
+        <description>Currency Exchange Rate at 8 decimal place precision</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Currency Exchange Rate at 8 decimal place precision</inlineHelpText>
+        <label>Exchange Rate</label>
+        <precision>18</precision>
+        <required>true</required>
+        <scale>8</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Memo_Text__c</fullName>
+        <externalId>false</externalId>
+        <label>Memo Text</label>
+        <length>10000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Memo__c</fullName>
+        <externalId>false</externalId>
+        <label>Memo</label>
+        <length>10000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>NS_Invoice_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>NS Invoice Number</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NS_SO_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>NS SO Number</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NS_Status__c</fullName>
+        <description>The Status of the record in NetSuite</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Status of the record in NetSuite</inlineHelpText>
+        <label>NS_Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Open</fullName>
+                    <default>false</default>
+                    <label>Open</label>
+                </value>
+                <value>
+                    <fullName>Fully Applied</fullName>
+                    <default>false</default>
+                    <label>Fully Applied</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Order__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Order</label>
+        <referenceTo>Order__c</referenceTo>
+        <relationshipName>Account_Billing_Info</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>PO_Date__c</fullName>
+        <externalId>false</externalId>
+        <label>PO Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>PO__c</fullName>
+        <externalId>false</externalId>
+        <label>PO #</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Terms__c</fullName>
+        <externalId>false</externalId>
+        <label>Payment Terms</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Posting_Period__c</fullName>
+        <description>Date in which the Credit or Debit will be recognized</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date in which the Credit or Debit will be recognized</inlineHelpText>
+        <label>Posting Period</label>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Reason__c</fullName>
+        <description>Reason for the Credit Memo or Debit Memo</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Reason for the Credit Memo or Debit Memo</inlineHelpText>
+        <label>Reason</label>
+        <length>128</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Region__c</fullName>
+        <externalId>false</externalId>
+        <formula>Order__r.Region__c</formula>
+        <label>Region</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Sales_Rep__c</fullName>
+        <externalId>false</externalId>
+        <label>Sales Rep</label>
+        <length>128</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Ship_To__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Ship To</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Account_Billing_Info3</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Sold_To_NS_Bill_To__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <description>Primary Sold To Mandatory in NetSuite</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Primary Sold To Mandatory in NetSuite</inlineHelpText>
+        <label>Sold To NS Bill To</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Account_Billing_Info1</relationshipName>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Sold_To__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Secondary Optional Sold To in NetSuite</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Secondary Optional Sold To in NetSuite</inlineHelpText>
+        <label>Sold To</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipName>Account_Billing_Info</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <description>SalesForce status of this Account Billing Info Record</description>
+        <externalId>false</externalId>
+        <inlineHelpText>SalesForce status of this Account Billing Info Record</inlineHelpText>
+        <label>Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>New</fullName>
+                    <default>true</default>
+                    <label>New</label>
+                </value>
+                <value>
+                    <fullName>Send Email</fullName>
+                    <default>false</default>
+                    <label>Send Email</label>
+                </value>
+                <value>
+                    <fullName>Email Sent</fullName>
+                    <default>false</default>
+                    <label>Email Sent</label>
+                </value>
+                <value>
+                    <fullName>PDF Attached</fullName>
+                    <default>false</default>
+                    <label>PDF Attached</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Subsidiary__c</fullName>
+        <externalId>false</externalId>
+        <formula>Order__r.End_User_Name__r.Subsidary__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Subsidiary</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Tax_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Tax Amount</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Tax_Number__c</fullName>
+        <externalId>false</externalId>
+        <label>Tax Number</label>
+        <length>32</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Total_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Total Amount</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Transaction_Amount__c</fullName>
+        <externalId>false</externalId>
+        <label>Transaction Amount</label>
+        <precision>16</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <label>Credit Memo</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>Document_Type__c</columns>
+        <columns>Sold_To_NS_Bill_To__c</columns>
+        <columns>End_User__c</columns>
+        <columns>Subsidiary__c</columns>
+        <columns>NS_Status__c</columns>
+        <columns>Status__c</columns>
+        <columns>Email1__c</columns>
+        <columns>Order__c</columns>
+        <columns>Date__c</columns>
+        <columns>Total_Amount__c</columns>
+        <columns>Account_Billing_Info_Line_Total__c</columns>
+        <columns>Memo__c</columns>
+        <columns>Memo_Text__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Cloud_Credit_Memos</fullName>
+        <columns>NAME</columns>
+        <columns>RECORDTYPE</columns>
+        <columns>Document_Type__c</columns>
+        <columns>Sold_To_NS_Bill_To__c</columns>
+        <columns>End_User__c</columns>
+        <columns>Subsidiary__c</columns>
+        <columns>NS_Status__c</columns>
+        <columns>Status__c</columns>
+        <columns>Email1__c</columns>
+        <columns>Order__c</columns>
+        <columns>Date__c</columns>
+        <columns>Total_Amount__c</columns>
+        <columns>Account_Billing_Info_Line_Total__c</columns>
+        <columns>Memo__c</columns>
+        <columns>Memo_Text__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account_Billing_Info__c.Cloud_Billing</value>
+        </filters>
+        <label>Cloud Credit Memos</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Credit_Memo_FinOps_Account_Billing_Info</fullName>
+        <filterScope>Queue</filterScope>
+        <label>FinOps</label>
+        <queue>Credit_Memo_FinOps</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Credit_Memo_OM_Director_Account_Billing_Info</fullName>
+        <filterScope>Queue</filterScope>
+        <label>OM Director</label>
+        <queue>Credit_Memo_OM_Director</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Credit_Memo_Revenue_Director_Account_Billing_Info</fullName>
+        <filterScope>Queue</filterScope>
+        <label>Revenue Accountant</label>
+        <queue>Credit_Memo_Revenue_Director</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <listViews>
+        <fullName>Credit_Memo_VP_Shared_Services_Account_Billing_Info</fullName>
+        <filterScope>Queue</filterScope>
+        <label>VP Shared Services</label>
+        <queue>Credit_Memo_VP_Shared_Services</queue>
+        <sharedTo>
+            <allInternalUsers></allInternalUsers>
+        </sharedTo>
+    </listViews>
+    <nameField>
+        <label>Document Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Credit Memo</pluralLabel>
+    <recordTypes>
+        <fullName>Cloud_Billing</fullName>
+        <active>true</active>
+        <description>Credit Memo Associated with Cloud Billing Order</description>
+        <label>Cloud Billing</label>
+        <picklistValues>
+            <picklist>Document_Type__c</picklist>
+            <values>
+                <fullName>Credit Memo</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Debit Memo</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>NS_Status__c</picklist>
+            <values>
+                <fullName>Fully Applied</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Open</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Email Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>PDF Attached</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Send Email</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <recordTypes>
+        <fullName>General</fullName>
+        <active>true</active>
+        <description>General Credit Memos not specifically associated with Cloud Billing</description>
+        <label>General</label>
+        <picklistValues>
+            <picklist>Document_Type__c</picklist>
+            <values>
+                <fullName>Credit Memo</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Debit Memo</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>NS_Status__c</picklist>
+            <values>
+                <fullName>Fully Applied</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Open</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>Status__c</picklist>
+            <values>
+                <fullName>Email Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>New</fullName>
+                <default>true</default>
+            </values>
+            <values>
+                <fullName>PDF Attached</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Send Email</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+    </recordTypes>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+    <webLinks>
+        <fullName>Attach_PDF</fullName>
+        <availability>online</availability>
+        <description>Create a PDF and attach it to this record.</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Attach PDF</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/29.0/connection.js&quot;)}
+{!REQUIRESCRIPT(&quot;/soap/ajax/29.0/apex.js&quot;)}
+
+var opt = confirm(&quot;Are you sure you want to create and attach the Account Billing Info PDF?&quot;); 
+if (opt == true) {
+var currentStatus = &apos;{!Account_Billing_Info__c.Status__c}&apos;;
+if(currentStatus != &apos;New&apos;) 
+{ 
+alert(&apos;Account Billing Info can only attach PDF when in status New. Please delete any existing PDF and change the status to New if you wish to attach a new PDF.&apos;); 
+}
+else
+{
+var result =
+ sforce.apex.execute(&quot;AccountBillingInfoUtil&quot;,
+&quot;attachPDF&quot;,
+{theId:&quot;{!Account_Billing_Info__c.Id}&quot;});
+alert(result);
+window.location.reload();
+}
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Generate_PDF</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <hasMenubar>false</hasMenubar>
+        <hasScrollbars>true</hasScrollbars>
+        <hasToolbar>false</hasToolbar>
+        <height>600</height>
+        <isResizable>true</isResizable>
+        <linkType>page</linkType>
+        <masterLabel>Generate PDF</masterLabel>
+        <openType>newWindow</openType>
+        <page>CloudAccountBillingPdf</page>
+        <position>none</position>
+        <protected>false</protected>
+        <showsLocation>false</showsLocation>
+        <showsStatus>false</showsStatus>
+    </webLinks>
+    <webLinks>
+        <fullName>Send_PDF</fullName>
+        <availability>online</availability>
+        <description>Send the attached PDF to all email addresses</description>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Send PDF</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/33.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/33.0/apex.js&quot;)} 
+
+var opt = confirm(&quot;Are you sure you want to email the Account Billing Info ?&quot;); 
+if (opt == true) 
+{ 
+var currentStatus = &apos;{!Account_Billing_Info__c.Status__c}&apos;; 
+if(currentStatus == &apos;Email Sent&apos;) 
+{ 
+alert(&apos;Account Billing Info has been sent out already. Please set the Account Billing Info status to PDF Attached to send again.&apos;); 
+}	
+else 
+{ 
+
+
+var objABI = new sforce.SObject(&quot;Account_Billing_Info__c&quot;); 
+objABI.Id = &apos;{!Account_Billing_Info__c.Id}&apos;; 
+objABI.Status__c = &apos;Send Email&apos;; 
+var result = sforce.connection.update([objABI]); 
+if(result[0].getBoolean(&quot;success&quot;)) 
+{ 
+alert(&apos;Account Billing Info sent successfully&apos;); 
+window.location.reload(); 
+} 
+else 
+{ 
+alert(&apos;Error : &apos;+result); 
+} 
+
+}	
+}</url>
+    </webLinks>
+</CustomObject>

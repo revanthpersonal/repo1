@@ -1,0 +1,88 @@
+<apex:page standardController="Case" extensions="CaseSelectRecordType" title="Select Case Type" >
+<style>
+
+ .lnk {
+    color: #4836BC !important;
+    font-size:14px;
+  
+  }
+
+</style>
+ <apex:form id="frm">
+        <apex:pagemessages />
+       
+        <apex:pageBlock id="blk" title="Select Case Type" >
+  
+    <br/><br/>
+   
+    <apex:pageBlock title="On-Premise Licenses:">
+    
+     <table style="margin-left: 50px !important;">
+       <tr><td style="width:200px;">    
+          <apex:commandLink action="{!premSupportType}" value="On-Premise Support Case" styleClass="lnk"></apex:commandLink>
+       </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;">Select to report problems with Genesys products or to ask a product-related question</a>
+        </td></tr>
+        
+       <td/><tr/>
+       <tr><td style="width:200px;">    
+          <apex:commandLink action="{!premMacType}" value="On-Premise Service Request" styleClass="lnk"></apex:commandLink>
+       </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;"><strong>PureConnect Managed Services customers only:</strong> Select to submit a MAC request on behalf of the customer</a>
+        </td></tr> 
+ 
+ <!--              
+       <td/><tr/>
+         <tr><td style="width:200px;">      
+           <apex:commandLink action="{!premFRType}" value="On-Premise Feature Request" styleClass="lnk"/>
+       </td><td>
+        <a style="color:#cc3300; font-size:14px; font-style:italic;"><strong>PureEngage customer only:</strong> Select to submit requests for new Genesys product features or functionality</a>
+       </td></tr>
+ -->
+ 
+     </table>  
+      
+    </apex:pageBlock>
+    
+    <apex:pageBlock title="Cloud Subscriptions:">
+    
+     <table  style="margin-left: 50px !important;">
+       <tr><td style="width:200px">    
+           <apex:commandLink action="{!cloudSupportType}" value="Cloud Support Case" styleClass="lnk"/>
+    </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;">Select to report problems with the Genesys  cloud platform or to ask a question about platform functionality</a>
+     </td></tr>
+     <td/><tr/>
+      <tr><td style="width:200px">   
+       <apex:commandLink action="{!cloudServiceType}" value="Cloud Service Request" styleClass="lnk"/>
+    </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;"><strong>PureConnect customers:</strong> submit a MAC request; <strong>PureEngage and PureCloud customers:</strong> add/remove cloud platform users, reset passwords, submit a change request (MAC/D), request a new project </a>
+        </td></tr>
+     <td/><tr/>
+     
+  <!--
+      <tr><td style="width:200px">   
+      <apex:commandLink action="{!cloudFRType}" value="Cloud Feature Request" styleClass="lnk"/> 
+     </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;"><strong>PureEngage and PureCloud customer only: </strong>Select to submit requests for new Genesys cloud platform features or functionality</a>
+       </td></tr>
+ -->
+ 
+    </table> 
+   </apex:pageBlock>
+        
+    <apex:pageBlock title="Generic:">  
+      <table  style="margin-left: 50px !important;">
+       <tr><td style="width:200px">  
+           <apex:commandLink action="{!adminType}" value="Admin Case" styleClass="lnk"/>
+     </td><td>
+           <a style="color:#cc3300; font-size:14px; font-style:italic;">Select to request My Support Portal access or to report issues with My Support Portal functionality</a>
+     </td></tr>
+         <td/><tr/>
+     
+     </table>     
+   </apex:pageBlock>
+        
+          </apex:pageBlock>
+    </apex:form>
+</apex:page>

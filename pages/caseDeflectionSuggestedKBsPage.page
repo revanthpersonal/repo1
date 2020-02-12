@@ -1,7 +1,0 @@
-<apex:page sidebar="false" showHeader="false"  contentType="application/html">
-
-
-	<c:CaseDeflectionSuggestedKBs supportProductId="{!$CurrentPage.parameters.sp}"  majorReleaseId="{!$CurrentPage.parameters.mr}" keyWordValue="{!$CurrentPage.parameters.keyword}"></c:CaseDeflectionSuggestedKBs>
-
-
-</apex:page>

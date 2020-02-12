@@ -1,2 +1,0 @@
-<apex:page sidebar="false" showHeader="false" standardController="Business_Region__c" action="{!URLFOR('/a05/e', null, ['Name'='.', 'retURL'='/a05/o'], true)}">
-</apex:page>

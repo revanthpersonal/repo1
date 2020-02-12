@@ -1,9 +1,0 @@
-<apex:page standardController="Order__c" extensions="DeclineMaintenanceCheck">
-   <apex:outputPanel rendered="{!isDecline}">
-   <b> <Font  Size="4" color="Red" >
-   <center>Maintenance Declined</center>
-  </Font>
-  </b>
-  </apex:outputPanel>
-  
-</apex:page>

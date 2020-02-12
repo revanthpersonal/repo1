@@ -1,4 +1,0 @@
-<apex:page sidebar="false" showHeader="false" >
-  <apex:pageMessage title="The Transfer Files service is currently unavailable. Please try again later." severity="Error" strength="3" />
-
-</apex:page>

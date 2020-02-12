@@ -263,6 +263,12 @@
         <fullName>AnnualRevenue</fullName>
         <trackFeedHistory>false</trackFeedHistory>
     </fields>
+	
+	<fields>
+        <fullName>AnnualRevenue2</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+    </fields>
+	
     <fields>
         <fullName>BillingAddress</fullName>
         <trackFeedHistory>false</trackFeedHistory>

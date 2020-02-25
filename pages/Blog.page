@@ -1,4 +1,0 @@
-<apex:page >
-    <c:PartnerPortalHeaderJS />
-    <apex:enhancedList type="Blog_Post__c" height="300" rowsPerPage="10" id="Blog_Post__cList" />
-</apex:page>
